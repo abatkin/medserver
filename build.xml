@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- ====================================================================== 
+     medserver    
+     ====================================================================== -->
+<project name="medserver" default="compile" basedir="." xmlns:ivy="antlib:org.apache.ivy.ant">
+	<description>
+            Med Server
+    </description>
+
+	<property name="build.dir" value="${basedir}/build" />
+	<property name="deps.dir" value="${build.dir}/deps" />
+	
+	<!-- ================================= 
+          target: compile              
+         ================================= -->
+	<target name="compile" description="Compile">
+
+	</target>
+
+	<target name="resolve" description="--> Retrieve dependencies">
+		<ivy:retrieve sync="true" pattern="${deps.dir}/[type]/[artifact]-[revision].[ext]" />
+	</target>
+
+</project>

@@ -1,0 +1,11 @@
+<ivy-module version="2.0">
+	<info organisation="net.batkin" module="medserver" />
+	<dependencies>
+		<dependency org="org.mongodb" name="mongo-java-driver" rev="2.7.2"/>
+		<dependency org="org.slf4j" name="slf4j-api" rev="1.6.4"/>
+		<dependency org="ch.qos.logback" name="logback-classic" rev="1.0.0" transitive="false"/>
+		<dependency org="ch.qos.logback" name="logback-core" rev="1.0.0" transitive="false"/>
+		<dependency org="ch.qos.logback" name="logback-access" rev="1.0.0" transitive="false"/>
+		<dependency org="org.eclipse.jetty" name="jetty-server" rev="8.0.4.v20111024"/>
+	</dependencies>
+</ivy-module>
