@@ -1,0 +1,11 @@
+When the server starts up, it can accept a number of command line options. It
+combines these command line options with any (optional) options specified in
+the config file, then connects to the database and combines those options with
+any options stored in mongo. Options specified earlier (command line, config
+file, mongo) are used.
+
+As soon as the server knows what port it can listen on, it starts listening,
+which will enable any clients to get an idea of the system status. For example,
+if the server can't connect to mongo, a message can be returned to the client
+indicating this.
+

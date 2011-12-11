@@ -1,0 +1,118 @@
+== users ==
+Store all users
+{
+	_id: (username/string),
+	fullName: string,
+	permissions: {
+		name: 1
+	},
+	preferences: {
+		name: value
+	}
+}
+	
+== configs ==
+Store all configuration information for both server and clients
+{
+	_id: (host id, "server" for the main server by default/string),
+	name: value
+}
+
+== schemas ==
+Form schema information. Patient schema has _id="patient"
+{
+	_id: (name/string),
+	active: boolean,
+	fields: [
+		{
+			name: string,
+			displayName: string,
+			helpText: string,
+			searchable: boolean,
+			defaultValue: (depends on type),
+			dataType: "string"|"integer"|"float"|"date"|"boolean"|"select"|"multiselect"|"table"|"form"|"forms"
+			... additional metadata depending on type (see below) ...
+		},
+		...
+	]
+}
+
+=== string ===
+maxLength: integer
+subType: "plain"|"multiline"|"url"|"email"
+multiline also allows:
+width: integer (cols)
+height: integer (rows)
+
+=== integer ===
+min: integer
+max: integer
+
+=== float ===
+min: float
+max: float
+
+=== date ===
+allowPast: boolean
+allowFuture: boolean
+
+=== select ===
+tableName: string (from lookuptables)
+allowOther: boolean (allow other free text to be used)
+typeAhead: boolean (whether it should be a regular dropdown, or a typeahead-style box)
+
+=== multiselect ===
+tableName: string (from lookuptables)
+minSelections: integer
+maxSelections: integer
+
+=== table ===
+columns: array of field values (no multiselect, table or forms allowed)
+maxRows: integer
+
+=== form ===
+formType: string (from forms)
+
+=== forms ===
+titleFormat: string (magic text in the format "text ${field}" that can expand values from the form)
+allowedFormTypes: array of string (from forms)
+
+== lookuptables ==
+Lookup tables that can be used by forms for select/multiselect fields
+{
+	_id: (name/string),
+	values: {
+		name: value,
+		...
+	}
+}
+
+== changelogs ==
+Audit information on all changes to all patients or forms
+{
+	changeType: "add"|"delete"|"change",
+	user: string (userid),
+	timestamp: date,
+	details: string,
+	patientChanged: string (id of patient),
+	formChanged: string (if it was a form, path to the form)
+	valuesChanged: [
+		{
+			name: value,
+			...
+		}
+	]
+}
+
+== patients ==
+Stored separately from forms to allow for more efficient searching
+... format depends on schema ...
+
+
+== forms ==
+... format depends on schema ...
+All include:
+formType: string (from schemas)
+patientId: string (id of patient)
+
+
