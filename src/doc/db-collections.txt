@@ -1,7 +1,7 @@
 == users ==
 Store all users
 {
-	_id: (username/string),
+	username: string (indexed),
 	fullName: string,
 	permissions: {
 		name: 1
@@ -14,14 +14,17 @@ Store all users
 == configs ==
 Store all configuration information for both server and clients
 {
-	_id: (host id, "server" for the main server by default/string),
-	name: value
+	configName: string (indexed),
+	values: {
+		key: value,
+		...
+	}
 }
 
 == schemas ==
 Form schema information. Patient schema has _id="patient"
 {
-	_id: (name/string),
+	schemaName: string (indexed),
 	active: boolean,
 	fields: [
 		{
@@ -80,7 +83,7 @@ allowedFormTypes: array of string (from forms)
 == lookuptables ==
 Lookup tables that can be used by forms for select/multiselect fields
 {
-	_id: (name/string),
+	tableName: string (indexed),
 	values: {
 		name: value,
 		...
@@ -91,10 +94,10 @@ Lookup tables that can be used by forms for select/multiselect fields
 Audit information on all changes to all patients or forms
 {
 	changeType: "add"|"delete"|"change",
-	user: string (userid),
+	userId: id-of-user (indexed),
 	timestamp: date,
 	details: string,
-	patientChanged: string (id of patient),
+	patentId: id-of-patient,
 	formChanged: string (if it was a form, path to the form)
 	valuesChanged: [
 		{
@@ -106,13 +109,25 @@ Audit information on all changes to all patients or forms
 
 == patients ==
 Stored separately from forms to allow for more efficient searching
-... format depends on schema ...
+{
+	patientName: string (indexed),
+	attachmentPath: string,
+	data: {
+		key: value
+		... depends on schema ...
+	}
+}
 
 
 == forms ==
-... format depends on schema ...
-All include:
-formType: string (from schemas)
-patientId: string (id of patient)
+{
+	formId: id-of-schema,
+	patientId: id-of-patient (indexed)
+	data: {
+		key: value
+		... depends on schema ...
+	}
+}
+
 
 
