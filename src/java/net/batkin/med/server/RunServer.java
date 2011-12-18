@@ -32,7 +32,13 @@ public class RunServer {
 			loadInitialConfigurations(args);
 			DBAccess.connect();
 			DBAccess.createDatabase();
-			fetchDbConfig();
+
+			Configuration config = Configuration.getInstance();
+			if (config.containsKey("server.name")) {
+				mergeDbConfig("server." + config.getValue("server.name"));
+			}
+			mergeDbConfig("server");
+
 			ConfigurationLoader.dumpConfiguration();
 			createServer();
 		} catch (ConfigurationException e) {
@@ -44,10 +50,10 @@ public class RunServer {
 		LoggerFactory.getLogger(RunServer.class).warn("Server has been shut down");
 	}
 
-	private static void fetchDbConfig() {
+	private static void mergeDbConfig(String name) {
 		DBCollection c = DBAccess.getCollection(DatabaseCollection.Configs);
 		DBObject server = new BasicDBObject();
-		server.put("serverName", "server");
+		server.put("configName", name);
 		DBObject obj = c.findOne(server);
 		if (obj == null) {
 			return;
@@ -67,15 +73,15 @@ public class RunServer {
 			}
 		}
 
-		Configuration.getInstance().addValues(ConfigurationSource.Database, newValues);
+		Configuration.getInstance().addValues(ConfigurationSource.createDatabaseSource(name), newValues);
 	}
 
 	private static void loadInitialConfigurations(String[] args) throws ConfigurationException {
 		Configuration config = Configuration.getInstance();
 		ConfigurationLoader.parseCommandLine(args);
 
-		if (config.containsKey("config")) {
-			Properties props = loadProperties(config.getValue("config"));
+		if (config.containsKey("config.file")) {
+			Properties props = loadProperties(config.getValue("config.file"));
 			ConfigurationLoader.parseProperties(props);
 		}
 	}
@@ -83,7 +89,7 @@ public class RunServer {
 	private static void createServer() throws Exception {
 		Logger logger = LoggerFactory.getLogger(RunServer.class);
 
-		int port = Configuration.getInstance().getIntegerValue("port", 8080);
+		int port = Configuration.getInstance().getIntegerValue("http.port", 8080);
 		logger.info("Starting web server on port " + port);
 
 		server = new Server(port);

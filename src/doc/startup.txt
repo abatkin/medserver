@@ -4,8 +4,20 @@ the config file, then connects to the database and combines those options with
 any options stored in mongo. Options specified earlier (command line, config
 file, mongo) are used.
 
-As soon as the server knows what port it can listen on, it starts listening,
-which will enable any clients to get an idea of the system status. For example,
-if the server can't connect to mongo, a message can be returned to the client
-indicating this.
+Configuration Options:
+
+config.file (command line) - Properties file that
+contains additional settings
+
+http.port - Web server port (defaults to 8080)
+
+Database settings must come from command line or config file (but all are
+optional)
+db.host - Database hostname (defaults to 127.0.0.1)
+db.port - Database port (defaults to MongoDB default)
+db.name - Database name (sefaults to "meddb")
+
+server.name (command line/config file) - Additional DB configuration to load,
+before the "server" config
+
 

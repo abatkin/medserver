@@ -98,8 +98,24 @@ public class Configuration {
 		}
 	}
 
-	public enum ConfigurationSource {
-		CommandLine, ConfigFile, Database
+	public static class ConfigurationSource {
+		private String name;
+
+		private ConfigurationSource(String name) {
+			this.name = name;
+		}
+
+		@Override
+		public String toString() {
+			return name;
+		}
+
+		public static final ConfigurationSource CommandLine = new ConfigurationSource("CommandLine");
+		public static final ConfigurationSource ConfigFile = new ConfigurationSource("ConfigFile");
+
+		public static ConfigurationSource createDatabaseSource(String name) {
+			return new ConfigurationSource("Database[" + name + "]");
+		}
 	}
 
 	public class ConfigurationValue {
