@@ -7,5 +7,6 @@
 		<dependency org="ch.qos.logback" name="logback-core" rev="1.0.0" transitive="false"/>
 		<dependency org="ch.qos.logback" name="logback-access" rev="1.0.0" transitive="false"/>
 		<dependency org="org.eclipse.jetty" name="jetty-server" rev="8.0.4.v20111024"/>
+		<dependency org="com.google.code.gson" name="gson" rev="2.0"/>
 	</dependencies>
 </ivy-module>

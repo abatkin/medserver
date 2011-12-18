@@ -15,6 +15,8 @@ import org.eclipse.jetty.server.Request;
 import org.eclipse.jetty.server.handler.AbstractHandler;
 import org.slf4j.LoggerFactory;
 
+import com.google.gson.JsonObject;
+
 public class RestHandler extends AbstractHandler {
 
 	private Map<String, Map<String, Controller>> controllerMap;
@@ -31,14 +33,19 @@ public class RestHandler extends AbstractHandler {
 		gets.put("status", new StatusController());
 		gets.put("shutdown", new Controller() {
 			@Override
-			public void handle(String[] parts, HttpServletRequest request, HttpServletResponse response) {
+			public void handle(String[] parts, HttpServletRequest request, HttpServletResponse response) throws IOException {
 				LoggerFactory.getLogger(RunServer.class).warn("Server is shutting down");
+
+				JsonObject message = new JsonObject();
+				message.addProperty("success", Boolean.TRUE);
+
+				Controller.sendResponse(response, message);
 				try {
 					new Thread() {
 						public void run() {
 							try {
 								Thread.sleep(5000);
-								
+
 								getServer().stop();
 							} catch (Exception e) {
 								// Ignore
@@ -54,6 +61,8 @@ public class RestHandler extends AbstractHandler {
 
 	@Override
 	public void handle(String target, Request baseRequest, HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
+		response.setContentType("application/json");
+
 		Map<String, Controller> controllers = controllerMap.get(baseRequest.getMethod());
 		if (controllers != null) {
 			String[] parts = target.substring(1).split("/");
@@ -68,7 +77,8 @@ public class RestHandler extends AbstractHandler {
 			}
 		}
 
-		response.sendError(HttpServletResponse.SC_NOT_FOUND, "Not Found");
+		Controller.sendError(response, HttpServletResponse.SC_NOT_FOUND, ErrorCodes.ERROR_CODE_NOT_FOUND, "Invalid controller");
+		baseRequest.setHandled(true);
 	}
 
 }
