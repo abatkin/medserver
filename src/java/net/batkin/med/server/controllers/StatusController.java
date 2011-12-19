@@ -6,6 +6,7 @@ import java.util.List;
 
 import net.batkin.med.server.configuration.Configuration;
 import net.batkin.med.server.configuration.Configuration.ConfigurationSource;
+import net.batkin.med.server.exception.ControllerException;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;

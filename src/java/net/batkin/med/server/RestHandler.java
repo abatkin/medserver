@@ -10,8 +10,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import net.batkin.med.server.controllers.Controller;
-import net.batkin.med.server.controllers.ControllerException;
 import net.batkin.med.server.controllers.StatusController;
+import net.batkin.med.server.exception.ControllerException;
 
 import org.eclipse.jetty.server.Request;
 import org.eclipse.jetty.server.handler.AbstractHandler;
@@ -38,7 +38,6 @@ public class RestHandler extends AbstractHandler {
 		controllerMap.put("PUT", puts);
 
 		gets.put("status", new StatusController());
-		posts.put("status", new StatusController());
 		gets.put("shutdown", new Controller() {
 			@Override
 			public JsonObject handle(String[] parts, JsonObject request) throws ControllerException {

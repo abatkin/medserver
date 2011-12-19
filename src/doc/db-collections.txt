@@ -1,11 +1,12 @@
 == users ==
 Store all users
 {
-	username: string (indexed),
+	userName: string (indexed),
 	fullName: string,
-	permissions: {
-		name: 1
-	},
+	permissions: [
+		"permission1",
+		...
+	],
 	preferences: {
 		name: value
 	}

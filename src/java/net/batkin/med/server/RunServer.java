@@ -2,28 +2,21 @@ package net.batkin.med.server;
 
 import java.io.FileInputStream;
 import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 
-import net.batkin.med.server.DBAccess.DatabaseCollection;
 import net.batkin.med.server.configuration.Configuration;
 import net.batkin.med.server.configuration.Configuration.ConfigurationSource;
-import net.batkin.med.server.configuration.ConfigurationException;
 import net.batkin.med.server.configuration.ConfigurationLoader;
 import net.batkin.med.server.configuration.ConfigurationOption;
+import net.batkin.med.server.db.DBAccess;
+import net.batkin.med.server.db.DBConfigUtility;
+import net.batkin.med.server.exception.ConfigurationException;
 
-import org.bson.BSONObject;
 import org.eclipse.jetty.server.Server;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import com.mongodb.BasicDBObject;
-import com.mongodb.DBCollection;
-import com.mongodb.DBObject;
 
 public class RunServer {
 
@@ -53,35 +46,7 @@ public class RunServer {
 	}
 
 	private static void mergeDbConfig(String name) {
-		DBCollection c = DBAccess.getCollection(DatabaseCollection.Configs);
-		DBObject server = new BasicDBObject();
-		server.put("configName", name);
-		DBObject obj = c.findOne(server);
-		if (obj == null) {
-			return;
-		}
-
-		Object configObj = obj.get("values");
-		if (!(configObj instanceof BSONObject)) {
-			return;
-		}
-
-		BSONObject config = (BSONObject) configObj;
-
-		Map<String, List<String>> newValues = new HashMap<String, List<String>>();
-		for (String key : config.keySet()) {
-			Object val = config.get(key);
-			if (val instanceof String) {
-				newValues.put(key, Collections.singletonList((String) val));
-			} else if (val instanceof List) {
-				List<String> values = new ArrayList<String>();
-				for (Object listObj : (List<?>) val) {
-					values.add(listObj.toString());
-				}
-				newValues.put(key, values);
-			}
-		}
-
+		Map<String, List<String>> newValues = DBConfigUtility.loadDbConfig(name);
 		Configuration.getInstance().addValues(ConfigurationSource.createDatabaseSource(name), newValues);
 	}
 

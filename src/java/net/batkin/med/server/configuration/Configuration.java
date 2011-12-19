@@ -7,6 +7,8 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
+import net.batkin.med.server.exception.ConfigurationException;
+
 public class Configuration {
 
 	private static Configuration instance = new Configuration();
