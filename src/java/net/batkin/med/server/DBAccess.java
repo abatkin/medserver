@@ -1,6 +1,7 @@
 package net.batkin.med.server;
 
 import net.batkin.med.server.configuration.Configuration;
+import net.batkin.med.server.configuration.ConfigurationOption;
 
 import com.mongodb.DB;
 import com.mongodb.DBCollection;
@@ -42,15 +43,15 @@ public class DBAccess {
 			throw new RuntimeException("Already connected to database");
 		}
 		Configuration config = Configuration.getInstance();
-		String dbHost = config.getValue("db.host", "127.0.0.1");
-		int dbPort = config.getIntegerValue("db.port", -1);
+		String dbHost = config.getValue(ConfigurationOption.CONFIG_DB_HOST, "127.0.0.1");
+		int dbPort = config.getIntegerValue(ConfigurationOption.CONFIG_DB_PORT, -1);
 		Mongo mongo;
 		if (dbPort > 0) {
 			mongo = new Mongo(dbHost, dbPort);
 		} else {
 			mongo = new Mongo(dbHost);
 		}
-		String dbName = config.getValue("db.name", "meddb");
+		String dbName = config.getValue(ConfigurationOption.CONFIG_DB_NAME, "meddb");
 		db = mongo.getDB(dbName);
 	}
 

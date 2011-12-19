@@ -14,7 +14,9 @@ import net.batkin.med.server.configuration.Configuration;
 import net.batkin.med.server.configuration.Configuration.ConfigurationSource;
 import net.batkin.med.server.configuration.ConfigurationException;
 import net.batkin.med.server.configuration.ConfigurationLoader;
+import net.batkin.med.server.configuration.ConfigurationOption;
 
+import org.bson.BSONObject;
 import org.eclipse.jetty.server.Server;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -34,8 +36,8 @@ public class RunServer {
 			DBAccess.createDatabase();
 
 			Configuration config = Configuration.getInstance();
-			if (config.containsKey("server.name")) {
-				mergeDbConfig("server." + config.getValue("server.name"));
+			if (config.containsKey(ConfigurationOption.CONFIG_SERVER_NAME)) {
+				mergeDbConfig("server." + config.getValue(ConfigurationOption.CONFIG_SERVER_NAME));
 			}
 			mergeDbConfig("server");
 
@@ -59,9 +61,16 @@ public class RunServer {
 			return;
 		}
 
+		Object configObj = obj.get("values");
+		if (!(configObj instanceof BSONObject)) {
+			return;
+		}
+
+		BSONObject config = (BSONObject) configObj;
+
 		Map<String, List<String>> newValues = new HashMap<String, List<String>>();
-		for (String key : obj.keySet()) {
-			Object val = obj.get(key);
+		for (String key : config.keySet()) {
+			Object val = config.get(key);
 			if (val instanceof String) {
 				newValues.put(key, Collections.singletonList((String) val));
 			} else if (val instanceof List) {
@@ -80,8 +89,8 @@ public class RunServer {
 		Configuration config = Configuration.getInstance();
 		ConfigurationLoader.parseCommandLine(args);
 
-		if (config.containsKey("config.file")) {
-			Properties props = loadProperties(config.getValue("config.file"));
+		if (config.containsKey(ConfigurationOption.CONFIG_CONFIG_FILE)) {
+			Properties props = loadProperties(config.getValue(ConfigurationOption.CONFIG_CONFIG_FILE));
 			ConfigurationLoader.parseProperties(props);
 		}
 	}
@@ -89,7 +98,7 @@ public class RunServer {
 	private static void createServer() throws Exception {
 		Logger logger = LoggerFactory.getLogger(RunServer.class);
 
-		int port = Configuration.getInstance().getIntegerValue("http.port", 8080);
+		int port = Configuration.getInstance().getIntegerValue(ConfigurationOption.CONFIG_HTTP_SERVER_PORT, 8080);
 		logger.info("Starting web server on port " + port);
 
 		server = new Server(port);
