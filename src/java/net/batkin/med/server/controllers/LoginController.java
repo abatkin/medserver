@@ -4,6 +4,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import org.slf4j.LoggerFactory;
+
 import net.batkin.med.server.dataModel.User;
 import net.batkin.med.server.db.DBConfigUtility;
 import net.batkin.med.server.db.DBUserUtility;
@@ -16,10 +18,16 @@ public class LoginController extends Controller {
 
 	@Override
 	public JsonObject handle(String[] parts, JsonObject request) throws ControllerException {
+		if (request == null) {
+			LoggerFactory.getLogger(LoginController.class).warn("No request data");
+			throw new LoginFailedException();
+		}
+		
 		String username = getStringValue(request, "username");
 		User user = DBUserUtility.loadUser(username);
 
 		if (user == null) {
+			LoggerFactory.getLogger(LoginController.class).warn("User not found");
 			throw new LoginFailedException();
 		}
 
@@ -35,8 +43,18 @@ public class LoginController extends Controller {
 				}
 			}
 		}
-		
-		
+
+		JsonObject response = new JsonObject();
+
+		response.addProperty("username", username);
+		response.addProperty("fullName", user.getFullName());
+		response.add("permissions", toJsonList(user.getPermissions()));
+		response.add("preferences", toJsonMapToString(user.getPreferences()));
+		response.add("configuration", toJsonMapToListOfStrings(clientConfig));
+
+		return response;
 	}
+
+
 
 }

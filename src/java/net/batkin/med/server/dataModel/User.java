@@ -19,21 +19,27 @@ public class User extends DataModel {
 	public User(BSONObject obj) throws ServerDataException {
 		this.username = getStringValue(obj, "userName");
 		this.fullName = getStringValue(obj, "fullName");
-		this.permissions = parsePermissions(getArrayValue(obj, "permissions", String.class));
-		this.preferences = parsePreferences(getObjectValue(obj, "preferences"));
+		this.permissions = parsePermissions(getOptionalArrayValue(obj, "permissions", String.class));
+		this.preferences = parsePreferences(getOptionalObjectValue(obj, "preferences"));
 	}
 
 	private Map<String, String> parsePreferences(BSONObject prefObj) throws ServerDataException {
 		Map<String, String> preferences = new HashMap<String, String>();
-		for (String key : prefObj.keySet()) {
-			String value = getStringValue(prefObj, key);
-			preferences.put(key, value);
+		if (prefObj != null) {
+			for (String key : prefObj.keySet()) {
+				String value = getStringValue(prefObj, key);
+				preferences.put(key, value);
+			}
 		}
 		return preferences;
 	}
 
 	private Set<String> parsePermissions(List<String> permissions) {
-		return new HashSet<String>(permissions);
+		if (permissions != null) {
+			return new HashSet<String>(permissions);
+		} else {
+			return new HashSet<String>();
+		}
 	}
 
 	public String getFullName() {

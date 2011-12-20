@@ -19,6 +19,13 @@ public abstract class DataModel {
 		return (String) property;
 	}
 
+	public static <T> List<T> getOptionalArrayValue(BSONObject obj, String name, Class<T> elementClass) throws ServerDataException {
+		if (obj.containsField(name)) {
+			return getArrayValue(obj, name, elementClass);
+		}
+		return null;
+	}
+
 	public static <T> List<T> getArrayValue(BSONObject obj, String name, Class<T> elementClass) throws ServerDataException {
 		if (!obj.containsField(name)) {
 			throw new ServerDataException("Missing BSON attribute (Array) " + name);
@@ -38,6 +45,13 @@ public abstract class DataModel {
 			index++;
 		}
 		return values;
+	}
+
+	public static BSONObject getOptionalObjectValue(BSONObject obj, String name) throws ServerDataException {
+		if (obj.containsField(name)) {
+			return getObjectValue(obj, name);
+		}
+		return null;
 	}
 
 	public static BSONObject getObjectValue(BSONObject obj, String name) throws ServerDataException {

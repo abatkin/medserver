@@ -47,7 +47,9 @@ public class RunServer {
 
 	private static void mergeDbConfig(String name) {
 		Map<String, List<String>> newValues = DBConfigUtility.loadDbConfig(name);
-		Configuration.getInstance().addValues(ConfigurationSource.createDatabaseSource(name), newValues);
+		if (newValues != null) {
+			Configuration.getInstance().addValues(ConfigurationSource.createDatabaseSource(name), newValues);
+		}
 	}
 
 	private static void loadInitialConfigurations(String[] args) throws ConfigurationException {

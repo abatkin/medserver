@@ -10,6 +10,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import net.batkin.med.server.controllers.Controller;
+import net.batkin.med.server.controllers.LoginController;
 import net.batkin.med.server.controllers.StatusController;
 import net.batkin.med.server.exception.ControllerException;
 
@@ -38,13 +39,12 @@ public class RestHandler extends AbstractHandler {
 		controllerMap.put("PUT", puts);
 
 		gets.put("status", new StatusController());
-		gets.put("shutdown", new Controller() {
+		posts.put("login", new LoginController());
+
+		posts.put("shutdown", new Controller() {
 			@Override
 			public JsonObject handle(String[] parts, JsonObject request) throws ControllerException {
 				LoggerFactory.getLogger(RunServer.class).warn("Server is shutting down");
-
-				JsonObject message = new JsonObject();
-				message.addProperty("success", Boolean.TRUE);
 
 				new Thread() {
 					public void run() {
@@ -58,7 +58,7 @@ public class RestHandler extends AbstractHandler {
 					};
 				}.start();
 
-				return message;
+				return null;
 			}
 		});
 	}
@@ -80,25 +80,27 @@ public class RestHandler extends AbstractHandler {
 					try {
 						obj = controller.handle(parts, jsonRequest);
 					} catch (ControllerException e) {
-						sendError(response, e.getHttpCode(), e.getApplicationCode(), e.getMessage());
+						sendError(baseRequest, response, e.getHttpCode(), e.getApplicationCode(), e.getMessage());
 						return;
 					} catch (Exception e) {
 						LoggerFactory.getLogger(RestHandler.class).warn("Error processing controller " + controllerName + ": " + e.getMessage(), e);
-						sendError(response, HttpServletResponse.SC_INTERNAL_SERVER_ERROR, ErrorCodes.ERROR_CODE_UNKNOWN, "Internal Error: " + e.getMessage());
+						sendError(baseRequest, response, HttpServletResponse.SC_INTERNAL_SERVER_ERROR, ErrorCodes.ERROR_CODE_UNKNOWN, "Internal Error: " + e.getMessage());
 						return;
 					}
 
 					if (obj != null) {
-						sendResponse(response, obj);
+						sendResponse(baseRequest, response, obj);
+					} else {
+						JsonObject message = new JsonObject();
+						message.addProperty("success", Boolean.TRUE);
+						sendResponse(baseRequest, response, message);
 					}
-					baseRequest.setHandled(true);
 					return;
 				}
 			}
 		}
 
-		sendError(response, HttpServletResponse.SC_NOT_FOUND, ErrorCodes.ERROR_CODE_NOT_FOUND, "Invalid controller");
-		baseRequest.setHandled(true);
+		sendError(baseRequest, response, HttpServletResponse.SC_NOT_FOUND, ErrorCodes.ERROR_CODE_NOT_FOUND, "Invalid controller");
 	}
 
 	private JsonObject readRequest(HttpServletRequest request) throws IOException {
@@ -114,11 +116,12 @@ public class RestHandler extends AbstractHandler {
 		return null;
 	}
 
-	public static void sendResponse(HttpServletResponse response, JsonObject message) throws IOException {
+	public static void sendResponse(Request baseRequest, HttpServletResponse response, JsonObject message) throws IOException {
 		gson.toJson(message, response.getWriter());
+		baseRequest.setHandled(true);
 	}
 
-	public static void sendError(HttpServletResponse response, int httpCode, int applicationCode, String message) throws IOException {
+	public static void sendError(Request baseRequest, HttpServletResponse response, int httpCode, int applicationCode, String message) throws IOException {
 		JsonObject responseMessage = new JsonObject();
 		responseMessage.addProperty("success", Boolean.FALSE);
 
@@ -129,6 +132,6 @@ public class RestHandler extends AbstractHandler {
 
 		response.setStatus(httpCode);
 
-		sendResponse(response, responseMessage);
+		sendResponse(baseRequest, response, responseMessage);
 	}
 }

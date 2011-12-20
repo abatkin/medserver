@@ -1,0 +1,46 @@
+== Status ==
+
+=== Request ===
+GET /status
+
+=== Response ===
+{
+	settings: [
+		{
+			name: '...',
+			source: '...',
+			values: [
+				'...',
+				...
+			]
+		},
+		...
+	]
+}
+
+
+== Shutdown ==
+
+=== Request ===
+POST to /shutdown
+No Body
+
+=== Response ===
+{
+	success: true
+}
+
+== Login ==
+
+=== Request ===
+POST to /login
+{
+	username: '...'
+}
+
+=== Response ===
+{
+	username: ...,
+	fullName: ...,
+	
+}
