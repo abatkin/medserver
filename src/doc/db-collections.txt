@@ -11,6 +11,16 @@ Store all users
 		name: value
 	}
 }
+
+== sessions ==
+Store all actively-logged in sessions. These should probably be cached in memory
+and the DB is only touched on a cache-miss, and the lastUpdatedAt are updated
+in a batch every few minutes. That can also clear out any expired sessions.
+{
+	userId: id-of-user,
+	createdAt: date,
+	lastUpdatedAt: date
+}
 	
 == configs ==
 Store all configuration information for both server and clients
@@ -26,6 +36,7 @@ Store all configuration information for both server and clients
 Form schema information. Patient schema has _id="patient"
 {
 	schemaName: string (indexed),
+	schemaVersion: integer,
 	active: boolean,
 	fields: [
 		{
@@ -100,18 +111,19 @@ Audit information on all changes to all patients or forms
 	details: string,
 	patentId: id-of-patient,
 	formChanged: string (if it was a form, path to the form)
-	valuesChanged: [
-		{
-			name: value,
-			...
-		}
-	]
+	valuesChanged: {
+		name: value,
+		...
+	}
 }
 
 == patients ==
 Stored separately from forms to allow for more efficient searching
 {
 	patientName: string (indexed),
+	schemaVersion: integer,
+	createdAt: date,
+	lastUpdatedAt: date,
 	attachmentPath: string,
 	data: {
 		key: value
@@ -123,6 +135,9 @@ Stored separately from forms to allow for more efficient searching
 == forms ==
 {
 	formId: id-of-schema,
+	schemaVersion: integer,
+	createdAt: date,
+	lastUpdatedAt: date,
 	patientId: id-of-patient (indexed)
 	data: {
 		key: value
