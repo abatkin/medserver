@@ -14,7 +14,7 @@ import net.batkin.med.server.exception.LoginFailedException;
 
 import com.google.gson.JsonObject;
 
-public class LoginController extends Controller {
+public class LoginController extends JsonController {
 
 	@Override
 	public JsonObject handle(String[] parts, JsonObject request) throws ControllerException {
@@ -22,7 +22,7 @@ public class LoginController extends Controller {
 			LoggerFactory.getLogger(LoginController.class).warn("No request data");
 			throw new LoginFailedException();
 		}
-		
+
 		String username = getStringValue(request, "username");
 		User user = DBUserUtility.loadUser(username);
 
@@ -54,7 +54,5 @@ public class LoginController extends Controller {
 
 		return response;
 	}
-
-
 
 }

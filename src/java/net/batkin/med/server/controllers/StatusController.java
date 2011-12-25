@@ -12,7 +12,7 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
 
-public class StatusController extends Controller {
+public class StatusController extends JsonController {
 
 	@Override
 	public JsonObject handle(String[] parts, JsonObject request) throws ControllerException {
