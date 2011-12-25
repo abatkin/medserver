@@ -1,4 +1,4 @@
-package net.batkin.med.server.controllers;
+package net.batkin.med.server.http;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;

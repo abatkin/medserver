@@ -1,4 +1,4 @@
-package net.batkin.med.server;
+package net.batkin.med.server.http;
 
 import java.io.FileInputStream;
 import java.io.InputStream;
@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 
+import net.batkin.med.server.RestHandler;
 import net.batkin.med.server.configuration.Configuration;
 import net.batkin.med.server.configuration.Configuration.ConfigurationSource;
 import net.batkin.med.server.configuration.ConfigurationLoader;

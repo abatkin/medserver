@@ -1,4 +1,4 @@
-package net.batkin.med.server.controllers;
+package net.batkin.med.server.http;
 
 import net.batkin.med.server.exception.ClientRequestException;
 import net.batkin.med.server.exception.ControllerException;

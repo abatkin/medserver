@@ -1,4 +1,4 @@
-package net.batkin.med.server.controllers;
+package net.batkin.med.server.http;
 
 import java.util.Collection;
 import java.util.List;

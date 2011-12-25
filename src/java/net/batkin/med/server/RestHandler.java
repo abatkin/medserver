@@ -8,13 +8,13 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import net.batkin.med.server.controllers.Controller;
 import net.batkin.med.server.controllers.LoginController;
-import net.batkin.med.server.controllers.RequestContext;
 import net.batkin.med.server.controllers.ShutdownController;
 import net.batkin.med.server.controllers.StatusController;
 import net.batkin.med.server.exception.ControllerException;
 import net.batkin.med.server.exception.FileNotFoundException;
+import net.batkin.med.server.http.Controller;
+import net.batkin.med.server.http.RequestContext;
 
 import org.eclipse.jetty.server.Request;
 import org.eclipse.jetty.server.handler.AbstractHandler;
