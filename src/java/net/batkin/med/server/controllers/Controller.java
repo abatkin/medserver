@@ -2,14 +2,39 @@ package net.batkin.med.server.controllers;
 
 import java.io.IOException;
 
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import net.batkin.med.server.exception.ControllerException;
 
-import org.eclipse.jetty.server.Request;
+import com.google.gson.Gson;
+import com.google.gson.JsonObject;
 
 public abstract class Controller {
 
-	public abstract void handle(String[] parts, Request baseRequest, HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException;
+	public static final Gson gson = new Gson();
 
+	public abstract void handle(RequestContext context) throws ControllerException;
+
+	public static void sendResponse(RequestContext context, JsonObject message) throws IOException {
+		gson.toJson(message, context.getResponse().getWriter());
+		context.getBaseRequest().setHandled(true);
+	}
+
+	public static void sendError(RequestContext context, int httpCode, int applicationCode, String message) throws IOException {
+		JsonObject responseMessage = buildGenericResponse(false, message, applicationCode);
+		context.getResponse().setStatus(httpCode);
+		sendResponse(context, responseMessage);
+	}
+
+	public static JsonObject buildGenericResponse(boolean success, String message, int applicationCode) {
+		JsonObject response = new JsonObject();
+		response.addProperty("success", Boolean.valueOf(success));
+
+		if (message != null) {
+			JsonObject info = new JsonObject();
+			info.addProperty("code", Integer.valueOf(applicationCode));
+			info.addProperty("message", message);
+			response.add("info", info);
+		}
+
+		return response;
+	}
 }

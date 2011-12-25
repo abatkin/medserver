@@ -17,7 +17,7 @@ public class ShutdownController extends JsonController {
 	}
 
 	@Override
-	public JsonObject handle(String[] parts, JsonObject request) throws ControllerException {
+	public JsonObject handle(RequestContext context, JsonObject request) throws ControllerException {
 		LoggerFactory.getLogger(RunServer.class).warn("Server is shutting down");
 
 		new Thread() {

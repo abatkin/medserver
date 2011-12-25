@@ -15,7 +15,7 @@ import com.google.gson.JsonPrimitive;
 public class StatusController extends JsonController {
 
 	@Override
-	public JsonObject handle(String[] parts, JsonObject request) throws ControllerException {
+	public JsonObject handle(RequestContext context, JsonObject request) throws ControllerException {
 		JsonObject obj = new JsonObject();
 
 		JsonArray settingsObj = new JsonArray();

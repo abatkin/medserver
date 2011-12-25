@@ -1,8 +1,9 @@
-package net.batkin.med.server.exception;
+package net.batkin.med.server.controllers.exception;
 
 import javax.servlet.http.HttpServletResponse;
 
 import net.batkin.med.server.ErrorCodes;
+import net.batkin.med.server.exception.ControllerException;
 
 public class LoginFailedException extends ControllerException {
 
