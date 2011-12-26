@@ -3,24 +3,24 @@ package net.batkin.med.server.controllers;
 import net.batkin.med.server.exception.ControllerException;
 import net.batkin.med.server.http.JsonController;
 import net.batkin.med.server.http.RequestContext;
-import net.batkin.med.server.http.RunServer;
+import net.batkin.med.server.http.RestHandler;
+import net.batkin.med.server.session.SessionManager;
 
-import org.eclipse.jetty.server.Server;
 import org.slf4j.LoggerFactory;
 
 import com.google.gson.JsonObject;
 
 public class ShutdownController extends JsonController {
 
-	private Server server;
+	private RestHandler server;
 
-	public ShutdownController(Server server) {
-		this.server = server;
+	public ShutdownController(RestHandler restHandler) {
+		this.server = restHandler;
 	}
 
 	@Override
 	public JsonObject handle(RequestContext context, JsonObject request) throws ControllerException {
-		LoggerFactory.getLogger(RunServer.class).warn("Server is shutting down");
+		LoggerFactory.getLogger(ShutdownController.class).warn("Server is shutting down");
 
 		new Thread() {
 			public void run() {
@@ -28,8 +28,9 @@ public class ShutdownController extends JsonController {
 					Thread.sleep(5000);
 
 					server.stop();
+					SessionManager.getInstance().stop();
 				} catch (Exception e) {
-					LoggerFactory.getLogger(RunServer.class).warn("Error in shutdown: " + e.getMessage(), e);
+					LoggerFactory.getLogger(ShutdownController.class).warn("Error in shutdown: " + e.getMessage(), e);
 				}
 			};
 		}.start();

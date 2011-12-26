@@ -1,4 +1,4 @@
-package net.batkin.med.server;
+package net.batkin.med.server.http;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -13,8 +13,6 @@ import net.batkin.med.server.controllers.ShutdownController;
 import net.batkin.med.server.controllers.StatusController;
 import net.batkin.med.server.exception.ControllerException;
 import net.batkin.med.server.exception.FileNotFoundException;
-import net.batkin.med.server.http.Controller;
-import net.batkin.med.server.http.RequestContext;
 
 import org.eclipse.jetty.server.Request;
 import org.eclipse.jetty.server.handler.AbstractHandler;
@@ -37,7 +35,7 @@ public class RestHandler extends AbstractHandler {
 		gets.put("status", new StatusController());
 
 		posts.put("login", new LoginController());
-		posts.put("shutdown", new ShutdownController(getServer()));
+		posts.put("shutdown", new ShutdownController(this));
 	}
 
 	@Override
@@ -48,7 +46,11 @@ public class RestHandler extends AbstractHandler {
 			Controller controller = getController(context);
 			controller.handle(context);
 		} catch (ControllerException e) {
-			LoggerFactory.getLogger(RestHandler.class).warn("Error processing " + target + ": " + e.getMessage(), e);
+			if (e.shouldLogStackTrace()) {
+				LoggerFactory.getLogger(RestHandler.class).warn("Error processing " + target + ": " + e.getMessage(), e);
+			} else {
+				LoggerFactory.getLogger(RestHandler.class).warn("Error processing " + target + ": " + e.getMessage());
+			}
 			Controller.sendError(context, e.getHttpCode(), e.getApplicationCode(), e.getMessage());
 		} catch (Exception e) {
 			LoggerFactory.getLogger(RestHandler.class).warn("Error processing " + target + ": " + e.getMessage(), e);

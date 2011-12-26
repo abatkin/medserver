@@ -11,9 +11,9 @@ public class ControllerException extends Exception {
 		this.applicationCode = applicationCode;
 	}
 
-	public ControllerException(int code, String message, Throwable error) {
+	public ControllerException(int applicationCode, String message, Throwable error) {
 		super(message, error);
-		this.applicationCode = code;
+		this.applicationCode = applicationCode;
 	}
 
 	public int getApplicationCode() {
@@ -22,5 +22,9 @@ public class ControllerException extends Exception {
 
 	public int getHttpCode() {
 		return HttpServletResponse.SC_INTERNAL_SERVER_ERROR;
+	}
+
+	public boolean shouldLogStackTrace() {
+		return true;
 	}
 }

@@ -4,6 +4,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import javax.servlet.http.Cookie;
+
 import net.batkin.med.server.controllers.exception.LoginFailedException;
 import net.batkin.med.server.dataModel.User;
 import net.batkin.med.server.db.DBConfigUtility;
@@ -13,6 +15,7 @@ import net.batkin.med.server.http.JsonController;
 import net.batkin.med.server.http.RequestContext;
 import net.batkin.med.server.http.RequestUtility;
 import net.batkin.med.server.http.ResponseUtility;
+import net.batkin.med.server.session.SessionManager;
 
 import org.slf4j.LoggerFactory;
 
@@ -31,7 +34,7 @@ public class LoginController extends JsonController {
 		User user = DBUserUtility.loadUser(username);
 
 		if (user == null) {
-			LoggerFactory.getLogger(LoginController.class).warn("User not found");
+			LoggerFactory.getLogger(LoginController.class).warn("User [" + username + "] not found");
 			throw new LoginFailedException();
 		}
 
@@ -47,6 +50,9 @@ public class LoginController extends JsonController {
 				}
 			}
 		}
+
+		String sessionId = SessionManager.getInstance().createSession(user);
+		context.getResponse().addCookie(new Cookie("SessionId", sessionId));
 
 		JsonObject response = new JsonObject();
 

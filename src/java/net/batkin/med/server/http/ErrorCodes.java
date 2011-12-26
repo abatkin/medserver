@@ -1,4 +1,4 @@
-package net.batkin.med.server;
+package net.batkin.med.server.http;
 
 public class ErrorCodes {
 
@@ -7,5 +7,6 @@ public class ErrorCodes {
 	public static final int ERROR_CODE_INVALID_CLIENT_REQUEST = 3;
 	public static final int ERROR_CODE_INVALID_SERVER_DATA = 4;
 	public static final int ERROR_CODE_LOGIN_FAILED = 5;
-
+	public static final int ERROR_CODE_NOT_LOGGED_IN = 6;
+	public static final int ERROR_CODE_INVALID_SESSION = 7;
 }

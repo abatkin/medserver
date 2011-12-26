@@ -3,7 +3,6 @@ package net.batkin.med.server.http;
 import java.io.IOException;
 import java.io.Reader;
 
-import net.batkin.med.server.ErrorCodes;
 import net.batkin.med.server.exception.ControllerException;
 
 import com.google.gson.JsonElement;

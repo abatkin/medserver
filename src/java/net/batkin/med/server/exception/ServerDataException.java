@@ -1,6 +1,6 @@
 package net.batkin.med.server.exception;
 
-import net.batkin.med.server.ErrorCodes;
+import net.batkin.med.server.http.ErrorCodes;
 
 public class ServerDataException extends ControllerException {
 

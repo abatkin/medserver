@@ -18,7 +18,8 @@ public class DBAccess {
 		LookupTables("lookuptables", new String[] {"tableName"}),
 		Changelogs("changelogs", new String[] {"userId", "timestamp", "patientId"}),
 		Patients("patients", new String[] {"patientName"}),
-		Forms("forms", new String[] {"patientId"});
+		Forms("forms", new String[] {"patientId"}),
+		Sessions("sessions", new String[0]);
 
 		private String name;
 		private String[] indexes;

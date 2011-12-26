@@ -2,7 +2,7 @@ package net.batkin.med.server.exception;
 
 import javax.servlet.http.HttpServletResponse;
 
-import net.batkin.med.server.ErrorCodes;
+import net.batkin.med.server.http.ErrorCodes;
 
 public class FileNotFoundException extends ControllerException {
 

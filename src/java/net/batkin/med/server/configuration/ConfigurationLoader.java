@@ -104,7 +104,7 @@ public class ConfigurationLoader {
 	public static void dumpConfiguration() {
 		Configuration config = Configuration.getInstance();
 		List<String> keys = new ArrayList<String>(config.getKeys());
-		Logger logger = LoggerFactory.getLogger(Configuration.class);
+		Logger logger = LoggerFactory.getLogger(ConfigurationLoader.class);
 
 		Collections.sort(keys);
 		for (String key : keys) {

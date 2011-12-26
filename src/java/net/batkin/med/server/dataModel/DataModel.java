@@ -1,13 +1,39 @@
 package net.batkin.med.server.dataModel;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import net.batkin.med.server.exception.ServerDataException;
 
 import org.bson.BSONObject;
+import org.bson.types.ObjectId;
 
 public abstract class DataModel {
+
+	public static ObjectId getObjectIdValue(BSONObject obj, String name) throws ServerDataException {
+		if (!obj.containsField(name)) {
+			throw new ServerDataException("Missing BSON attribute (ObjectId) " + name);
+		}
+		Object property = obj.get(name);
+		if (!(property instanceof ObjectId)) {
+			throw new ServerDataException("BSON Attribute " + name + " should be a ObjectId");
+		}
+		return (ObjectId) property;
+	}
+
+	public static Date getDateValue(BSONObject obj, String name) throws ServerDataException {
+		if (!obj.containsField(name)) {
+			throw new ServerDataException("Missing BSON attribute (Date) " + name);
+		}
+		Object property = obj.get(name);
+		if (!(property instanceof Date)) {
+			throw new ServerDataException("BSON Attribute " + name + " should be a Date");
+		}
+		return (Date) property;
+
+	}
+
 	public static String getStringValue(BSONObject obj, String name) throws ServerDataException {
 		if (!obj.containsField(name)) {
 			throw new ServerDataException("Missing BSON attribute (String) " + name);
@@ -59,7 +85,7 @@ public abstract class DataModel {
 			throw new ServerDataException("Missing BSON attribute (BSONObject) " + name);
 		}
 		Object property = obj.get(name);
-		if (!(property instanceof String)) {
+		if (!(property instanceof BSONObject)) {
 			throw new ServerDataException("BSON Attribute " + name + " should be a BSONObject");
 		}
 		return (BSONObject) property;

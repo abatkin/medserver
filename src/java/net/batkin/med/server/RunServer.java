@@ -1,4 +1,4 @@
-package net.batkin.med.server.http;
+package net.batkin.med.server;
 
 import java.io.FileInputStream;
 import java.io.InputStream;
@@ -6,7 +6,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 
-import net.batkin.med.server.RestHandler;
 import net.batkin.med.server.configuration.Configuration;
 import net.batkin.med.server.configuration.Configuration.ConfigurationSource;
 import net.batkin.med.server.configuration.ConfigurationLoader;
@@ -14,6 +13,8 @@ import net.batkin.med.server.configuration.ConfigurationOption;
 import net.batkin.med.server.db.DBAccess;
 import net.batkin.med.server.db.DBConfigUtility;
 import net.batkin.med.server.exception.ConfigurationException;
+import net.batkin.med.server.http.RestHandler;
+import net.batkin.med.server.session.SessionManager;
 
 import org.eclipse.jetty.server.Server;
 import org.slf4j.Logger;
@@ -74,6 +75,9 @@ public class RunServer {
 		server.setStopAtShutdown(true);
 		server.setHandler(new RestHandler());
 		server.start();
+
+		logger.info("Starting Session Manager");
+		SessionManager.getInstance().start();
 
 		logger.info("Server started");
 	}

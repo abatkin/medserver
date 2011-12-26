@@ -9,14 +9,17 @@ import java.util.Set;
 import net.batkin.med.server.exception.ServerDataException;
 
 import org.bson.BSONObject;
+import org.bson.types.ObjectId;
 
 public class User extends DataModel {
+	private ObjectId id;
 	private String username;
 	private String fullName;
 	private Set<String> permissions;
 	private Map<String, String> preferences;
 
 	public User(BSONObject obj) throws ServerDataException {
+		this.id = getObjectIdValue(obj, "_id");
 		this.username = getStringValue(obj, "userName");
 		this.fullName = getStringValue(obj, "fullName");
 		this.permissions = parsePermissions(getOptionalArrayValue(obj, "permissions", String.class));
@@ -68,6 +71,10 @@ public class User extends DataModel {
 
 	public String getUsername() {
 		return username;
+	}
+
+	public ObjectId getId() {
+		return id;
 	}
 
 	@Override
