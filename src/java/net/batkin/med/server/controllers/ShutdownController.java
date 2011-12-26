@@ -26,9 +26,10 @@ public class ShutdownController extends JsonController {
 			public void run() {
 				try {
 					Thread.sleep(5000);
-
-					server.stop();
+					server.getServer().stop();
 					SessionManager.getInstance().stop();
+
+					LoggerFactory.getLogger(ShutdownController.class).warn("Shutdown thread is finished");
 				} catch (Exception e) {
 					LoggerFactory.getLogger(ShutdownController.class).warn("Error in shutdown: " + e.getMessage(), e);
 				}
