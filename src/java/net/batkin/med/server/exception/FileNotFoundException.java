@@ -15,4 +15,9 @@ public class FileNotFoundException extends ControllerException {
 		return HttpServletResponse.SC_NOT_FOUND;
 	}
 
+	@Override
+	public boolean shouldLogStackTrace() {
+		return false;
+	}
+
 }

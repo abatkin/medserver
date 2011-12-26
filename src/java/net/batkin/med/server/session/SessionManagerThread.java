@@ -21,6 +21,7 @@ import org.slf4j.LoggerFactory;
 import com.mongodb.BasicDBObject;
 import com.mongodb.DBCollection;
 import com.mongodb.DBObject;
+import com.mongodb.WriteResult;
 
 public class SessionManagerThread implements Runnable {
 
@@ -47,6 +48,8 @@ public class SessionManagerThread implements Runnable {
 			} catch (InterruptedException e) {
 				LoggerFactory.getLogger(SessionManagerThread.class).warn("Session manager was interrupted, shutting down");
 				running = false;
+			} catch (Exception e) {
+				LoggerFactory.getLogger(SessionManagerThread.class).warn("Caught exception processing sessions: " + e.getMessage(), e);
 			}
 		}
 
@@ -85,10 +88,20 @@ public class SessionManagerThread implements Runnable {
 		for (SessionData data : dirtys) {
 			touchDbSession(collection, data);
 		}
+		removeOldDbSessions(collection);
+	}
+
+	private void removeOldDbSessions(DBCollection collection) {
+		BasicDBObject query = new BasicDBObject("lastUpdatedAt", new BasicDBObject("$lt", getOldestDate()));
+		WriteResult result = collection.remove(query);
+		if (result != null) {
+			LoggerFactory.getLogger(SessionManagerThread.class).info("Removed " + result.getN() + " stale (uncached) sessions");
+		}
 	}
 
 	private void removeDbSession(DBCollection collection, SessionData data) {
 		ObjectId sessionId = data.getSessionId();
+		LoggerFactory.getLogger(SessionManagerThread.class).info("Destroying session [" + sessionId + "]");
 		collection.remove(new BasicDBObject("_id", sessionId));
 	}
 
@@ -99,6 +112,7 @@ public class SessionManagerThread implements Runnable {
 
 	private void touchDbSession(DBCollection collection, SessionData data) {
 		ObjectId sessionId = data.getSessionId();
+		LoggerFactory.getLogger(SessionManagerThread.class).info("Touching session [" + sessionId + "]");
 		DBObject session = loadDbSession(collection, sessionId);
 		if (session == null) {
 			synchronized (this) {

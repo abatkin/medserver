@@ -11,6 +11,7 @@ import javax.servlet.http.HttpServletResponse;
 import net.batkin.med.server.controllers.LoginController;
 import net.batkin.med.server.controllers.ShutdownController;
 import net.batkin.med.server.controllers.StatusController;
+import net.batkin.med.server.controllers.TestController;
 import net.batkin.med.server.exception.ControllerException;
 import net.batkin.med.server.exception.FileNotFoundException;
 
@@ -33,6 +34,7 @@ public class RestHandler extends AbstractHandler {
 		controllerMap.put("PUT", puts);
 
 		gets.put("status", new StatusController());
+		gets.put("test", new TestController());
 
 		posts.put("login", new LoginController());
 		posts.put("shutdown", new ShutdownController(this));
