@@ -11,8 +11,9 @@ import net.batkin.med.server.configuration.Configuration.ConfigurationSource;
 import net.batkin.med.server.configuration.ConfigurationLoader;
 import net.batkin.med.server.configuration.ConfigurationOption;
 import net.batkin.med.server.db.DBAccess;
-import net.batkin.med.server.db.DBConfigUtility;
+import net.batkin.med.server.db.utility.DBConfigUtility;
 import net.batkin.med.server.exception.ConfigurationException;
+import net.batkin.med.server.exception.ServerDataException;
 import net.batkin.med.server.http.RestHandler;
 import net.batkin.med.server.session.SessionManager;
 
@@ -47,7 +48,7 @@ public class RunServer {
 		LoggerFactory.getLogger(RunServer.class).warn("Server has been shut down");
 	}
 
-	private static void mergeDbConfig(String name) {
+	private static void mergeDbConfig(String name) throws ServerDataException {
 		Map<String, List<String>> newValues = DBConfigUtility.loadDbConfig(name);
 		if (newValues != null) {
 			Configuration.getInstance().addValues(ConfigurationSource.createDatabaseSource(name), newValues);

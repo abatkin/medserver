@@ -12,7 +12,7 @@ import com.mongodb.DBObject;
 
 public class DBUserUtility {
 
-	public static User loadUser(String username) throws ServerDataException {
+	public static User loadUserByUsername(String username) throws ServerDataException {
 		DBCollection c = DBAccess.getCollection(DatabaseCollection.Users);
 		DBObject userCriteria = new BasicDBObject();
 		userCriteria.put("userName", username);

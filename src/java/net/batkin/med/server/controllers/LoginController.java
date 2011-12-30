@@ -8,8 +8,8 @@ import javax.servlet.http.Cookie;
 
 import net.batkin.med.server.controllers.exception.LoginFailedException;
 import net.batkin.med.server.dataModel.User;
-import net.batkin.med.server.db.DBConfigUtility;
 import net.batkin.med.server.db.DBUserUtility;
+import net.batkin.med.server.db.utility.DBConfigUtility;
 import net.batkin.med.server.exception.ControllerException;
 import net.batkin.med.server.http.JsonController;
 import net.batkin.med.server.http.RequestContext;
@@ -31,7 +31,7 @@ public class LoginController extends JsonController {
 		}
 
 		String username = RequestUtility.getStringValue(request, "username");
-		User user = DBUserUtility.loadUser(username);
+		User user = DBUserUtility.loadUserByUsername(username);
 
 		if (user == null) {
 			LoggerFactory.getLogger(LoginController.class).warn("User [" + username + "] not found");

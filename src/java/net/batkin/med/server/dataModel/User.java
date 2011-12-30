@@ -1,11 +1,11 @@
 package net.batkin.med.server.dataModel;
 
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import net.batkin.med.server.db.utility.MapValueParser;
 import net.batkin.med.server.exception.ServerDataException;
 
 import org.bson.BSONObject;
@@ -23,18 +23,7 @@ public class User extends DataModel {
 		this.username = getStringValue(obj, "userName");
 		this.fullName = getStringValue(obj, "fullName");
 		this.permissions = parsePermissions(getOptionalArrayValue(obj, "permissions", String.class));
-		this.preferences = parsePreferences(getOptionalObjectValue(obj, "preferences"));
-	}
-
-	private Map<String, String> parsePreferences(BSONObject prefObj) throws ServerDataException {
-		Map<String, String> preferences = new HashMap<String, String>();
-		if (prefObj != null) {
-			for (String key : prefObj.keySet()) {
-				String value = getStringValue(prefObj, key);
-				preferences.put(key, value);
-			}
-		}
-		return preferences;
+		this.preferences = MapValueParser.getStringArrayMap(obj, "preferences");
 	}
 
 	private Set<String> parsePermissions(List<String> permissions) {

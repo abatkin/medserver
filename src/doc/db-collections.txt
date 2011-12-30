@@ -7,9 +7,10 @@ Store all users
 		"permission1",
 		...
 	],
-	preferences: {
-		name: value
-	}
+	preferences: [
+		{name: "name", value: "value"},
+		...
+	]
 }
 
 == sessions ==
@@ -26,10 +27,10 @@ in a batch every few minutes. That can also clear out any expired sessions.
 Store all configuration information for both server and clients
 {
 	configName: string (indexed),
-	values: {
-		key: value,
+	values: [
+		{name: "name", values: ["value1", ...]},
 		...
-	}
+	]
 }
 
 == schemas ==
@@ -96,10 +97,10 @@ allowedFormTypes: array of string (from forms)
 Lookup tables that can be used by forms for select/multiselect fields
 {
 	tableName: string (indexed),
-	values: {
-		name: value,
+	values: [
+		{value: "value", displayText: "text"},
 		...
-	}
+	]
 }
 
 == changelogs ==
@@ -111,10 +112,10 @@ Audit information on all changes to all patients or forms
 	details: string,
 	patentId: id-of-patient,
 	formChanged: string (if it was a form, path to the form)
-	valuesChanged: {
-		name: value,
+	valuesChanged: [
+		{key: "key", oldValue: "old", newValue: "new"},
 		...
-	}
+	]
 }
 
 == patients ==
@@ -125,10 +126,10 @@ Stored separately from forms to allow for more efficient searching
 	createdAt: date,
 	lastUpdatedAt: date,
 	attachmentPath: string,
-	data: {
-		key: value
+	data: [
+		{name: "name", value: "value"},
 		... depends on schema ...
-	}
+	]
 }
 
 
@@ -139,10 +140,10 @@ Stored separately from forms to allow for more efficient searching
 	createdAt: date,
 	lastUpdatedAt: date,
 	patientId: id-of-patient (indexed)
-	data: {
-		key: value
+	data: [
+		{name: "name", value: "value"},
 		... depends on schema ...
-	}
+	]
 }
 
 
