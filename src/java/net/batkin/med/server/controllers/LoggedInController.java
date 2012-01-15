@@ -6,6 +6,7 @@ import net.batkin.med.server.controllers.exception.InvalidSessionException;
 import net.batkin.med.server.controllers.exception.NotLoggedInException;
 import net.batkin.med.server.db.dataModel.User;
 import net.batkin.med.server.exception.ControllerException;
+import net.batkin.med.server.exception.ForbiddenException;
 import net.batkin.med.server.http.JsonController;
 import net.batkin.med.server.http.RequestContext;
 import net.batkin.med.server.session.SessionManager;
@@ -42,5 +43,15 @@ public abstract class LoggedInController extends JsonController {
 	}
 
 	public abstract JsonObject handle(RequestContext context, User user, JsonObject request) throws ControllerException;
+
+	protected void ensurePermission(User user, Permissions permission) throws ControllerException {
+		if (!user.getPermissions().contains(permission.toString())) {
+			ForbiddenException.missingPermission(permission);
+		}
+	}
+
+	public enum Permissions {
+		Admin
+	}
 
 }

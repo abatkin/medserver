@@ -125,7 +125,7 @@ public class SessionManagerThread implements Runnable {
 			return;
 		}
 
-		DBAccess.getCollection(DatabaseCollection.Sessions).save(data.getSession().toBson());
+		DBAccess.getCollection(DatabaseCollection.Sessions).save(data.getSession().toDbObject());
 	}
 
 	public SessionData createSession(ObjectId userId) throws ServerDataException {

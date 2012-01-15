@@ -50,7 +50,7 @@ public class Session extends DbDataModel {
 		return new SessionCreator(userId);
 	}
 
-	public DBObject toBson() {
+	public DBObject toDbObject() {
 		BasicDBObject obj = new BasicDBObject();
 		Date now = new Date();
 		obj.put("_id", sessionId);

@@ -8,6 +8,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import net.batkin.med.server.controllers.ConfigController;
 import net.batkin.med.server.controllers.LoginController;
 import net.batkin.med.server.controllers.ShutdownController;
 import net.batkin.med.server.controllers.StatusController;
@@ -27,17 +28,22 @@ public class RestHandler extends AbstractHandler {
 		controllerMap = new HashMap<String, Map<String, Controller>>();
 		Map<String, Controller> gets = new HashMap<String, Controller>();
 		Map<String, Controller> posts = new HashMap<String, Controller>();
-		Map<String, Controller> puts = new HashMap<String, Controller>();
+		Map<String, Controller> deletes = new HashMap<String, Controller>();
 
 		controllerMap.put("GET", gets);
 		controllerMap.put("POST", posts);
-		controllerMap.put("PUT", puts);
+		controllerMap.put("DELETE", deletes);
 
 		gets.put("status", new StatusController());
 		gets.put("test", new TestController());
 
 		posts.put("login", new LoginController());
 		posts.put("shutdown", new ShutdownController(this));
+
+		ConfigController configController = new ConfigController();
+		gets.put("config", configController);
+		posts.put("config", configController);
+		deletes.put("config", configController);
 	}
 
 	@Override

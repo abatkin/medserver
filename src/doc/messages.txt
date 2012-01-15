@@ -42,5 +42,39 @@ POST to /login
 {
 	username: ...,
 	fullName: ...,
+	permissions: [
+		"p1",
+		"p2",
+		...
+	],
 	
+	preferences: [
+		{name: "...", value: "..."},
+	],
+	
+	configuration: [
+		{name: "...", values: ["...", ...]},
+		...
+	]
+}
+
+== Configs ==
+GET to /config
+Returns a list of all config objects
+{
+	configNames: [
+		"config1",
+		"config2",
+		...
+	]
+} 
+
+GET to /config/{configName}
+Returns the data for the config named "configName"
+{
+	configName: ...,
+	values: [
+		{name: "...", values: ["...", ...]},
+		...
+	] 
 }

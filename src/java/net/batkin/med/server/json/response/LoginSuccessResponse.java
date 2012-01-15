@@ -23,8 +23,8 @@ public class LoginSuccessResponse extends ClientResponse {
 		response.addProperty("username", user.getUsername());
 		response.addProperty("fullName", user.getFullName());
 		response.add("permissions", toJsonList(user.getPermissions()));
-		response.add("preferences", toJsonMapToString(user.getPreferences()));
-		response.add("configuration", toJsonMapToListOfStrings(clientConfig));
+		response.add("preferences", toJsonMapToString(user.getPreferences(), "name", "value"));
+		response.add("configuration", toJsonMapToListOfStrings(clientConfig, "name", "values"));
 
 		return response;
 	}

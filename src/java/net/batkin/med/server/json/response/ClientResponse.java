@@ -3,7 +3,9 @@ package net.batkin.med.server.json.response;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
+
+import net.batkin.med.server.http.JsonListCreator;
+import net.batkin.med.server.http.JsonListCreator.JsonValueHandler;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
@@ -12,28 +14,22 @@ import com.google.gson.JsonPrimitive;
 
 public class ClientResponse {
 
-	public static JsonElement toJsonMapToListOfStrings(Map<String, List<String>> map) {
-		JsonObject obj = new JsonObject();
-
-		if (map != null) {
-			for (Entry<String, List<String>> entry : map.entrySet()) {
-				obj.add(entry.getKey(), toJsonList(entry.getValue()));
+	public static JsonArray toJsonMapToListOfStrings(Map<String, List<String>> map, String keyName, final String valuesName) {
+		return JsonListCreator.createList(map, keyName, new JsonValueHandler<List<String>>() {
+			@Override
+			public void populateJsonObject(JsonObject jsonObject, List<String> valueObject) {
+				jsonObject.add(valuesName, toJsonList(valueObject));
 			}
-		}
-
-		return obj;
+		});
 	}
 
-	public static JsonElement toJsonMapToString(Map<String, String> map) {
-		JsonObject obj = new JsonObject();
-
-		if (map != null) {
-			for (Entry<String, String> entry : map.entrySet()) {
-				obj.addProperty(entry.getKey(), entry.getValue());
+	public static JsonArray toJsonMapToString(Map<String, String> map, String keyName, final String valueName) {
+		return JsonListCreator.createList(map, keyName, new JsonValueHandler<String>() {
+			@Override
+			public void populateJsonObject(JsonObject jsonObject, String valueObject) {
+				jsonObject.add(valueName, new JsonPrimitive(valueObject));
 			}
-		}
-
-		return obj;
+		});
 	}
 
 	public static JsonElement toJsonList(Collection<String> strings) {

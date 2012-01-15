@@ -1,5 +1,6 @@
 package net.batkin.med.server.db.dataModel;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
@@ -7,16 +8,18 @@ import java.util.Set;
 
 import net.batkin.med.server.db.utility.BsonListCreator;
 import net.batkin.med.server.db.utility.BsonListCreator.BsonValueHandler;
+import net.batkin.med.server.db.utility.DBAccess;
 import net.batkin.med.server.db.utility.DBAccess.DatabaseCollection;
 import net.batkin.med.server.db.utility.MapValueParser;
 import net.batkin.med.server.db.utility.MapValueParser.MapValueHandler;
 import net.batkin.med.server.exception.ServerDataException;
 
 import org.bson.BSONObject;
-import org.bson.BasicBSONObject;
 import org.bson.types.BasicBSONList;
 import org.bson.types.ObjectId;
 
+import com.mongodb.BasicDBObject;
+import com.mongodb.DBCursor;
 import com.mongodb.DBObject;
 
 public class Config extends DbDataModel implements Map<String, List<String>> {
@@ -31,8 +34,8 @@ public class Config extends DbDataModel implements Map<String, List<String>> {
 		this.values = MapValueParser.getArrayMap(config, "values", "name", CONFIG_VALUE_PARSER);
 	}
 
-	public BSONObject toBson() {
-		BSONObject obj = new BasicBSONObject();
+	public DBObject toDbObject() {
+		DBObject obj = new BasicDBObject();
 
 		obj.put("_id", id);
 		obj.put("configName", name);
@@ -50,6 +53,10 @@ public class Config extends DbDataModel implements Map<String, List<String>> {
 				bsonObject.put("values", list);
 			}
 		});
+	}
+
+	public String getName() {
+		return name;
 	}
 
 	@Override
@@ -112,6 +119,11 @@ public class Config extends DbDataModel implements Map<String, List<String>> {
 		return values.entrySet();
 	}
 
+	public void replaceValues(Map<String, List<String>> newValues) {
+		clear();
+		putAll(newValues);
+	}
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -162,4 +174,23 @@ public class Config extends DbDataModel implements Map<String, List<String>> {
 
 		return new Config(config);
 	}
+
+	public static List<String> listConfigNames() {
+		List<String> configNames = new ArrayList<String>();
+
+		DBCursor cursor = DBAccess.getCollection(DatabaseCollection.Configs).find(new BasicDBObject(), new BasicDBObject("configName", Integer.valueOf(1)));
+		while (cursor.hasNext()) {
+			DBObject obj = cursor.next();
+			Object configNameObj = obj.get("configName");
+			if (configNameObj != null && configNameObj instanceof String) {
+				String configName = (String) configNameObj;
+				if (!configName.isEmpty()) {
+					configNames.add(configName);
+				}
+			}
+		}
+
+		return configNames;
+	}
+
 }
