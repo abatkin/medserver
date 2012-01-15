@@ -1,0 +1,27 @@
+package net.batkin.med.server.db.utility;
+
+import java.util.Map;
+import java.util.Map.Entry;
+
+import org.bson.BSONObject;
+import org.bson.BasicBSONObject;
+import org.bson.types.BasicBSONList;
+
+public class BsonListCreator {
+	public static <T> BasicBSONList createList(Map<String, T> map, String keyName, BsonValueHandler<T> valueHandler) {
+		BasicBSONList list = new BasicBSONList();
+
+		for (Entry<String, T> entry : map.entrySet()) {
+			BSONObject obj = new BasicBSONObject();
+			obj.put(keyName, entry.getKey());
+			valueHandler.populateBsonObject(obj, entry.getValue());
+			list.add(obj);
+		}
+
+		return list;
+	}
+
+	public interface BsonValueHandler<T> {
+		void populateBsonObject(BSONObject bsonObject, T valueObject);
+	}
+}

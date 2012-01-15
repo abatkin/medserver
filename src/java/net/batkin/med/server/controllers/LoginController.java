@@ -1,15 +1,13 @@
 package net.batkin.med.server.controllers;
 
 import java.util.List;
-import java.util.Map;
 import java.util.Map.Entry;
 
 import javax.servlet.http.Cookie;
 
 import net.batkin.med.server.controllers.exception.LoginFailedException;
-import net.batkin.med.server.dataModel.User;
-import net.batkin.med.server.db.DBUserUtility;
-import net.batkin.med.server.db.utility.DBConfigUtility;
+import net.batkin.med.server.db.dataModel.Config;
+import net.batkin.med.server.db.dataModel.User;
 import net.batkin.med.server.exception.ControllerException;
 import net.batkin.med.server.http.JsonController;
 import net.batkin.med.server.http.RequestContext;
@@ -31,18 +29,18 @@ public class LoginController extends JsonController {
 		}
 
 		String username = RequestUtility.getStringValue(request, "username");
-		User user = DBUserUtility.loadUserByUsername(username);
+		User user = User.loadUserByUsername(username);
 
 		if (user == null) {
 			LoggerFactory.getLogger(LoginController.class).warn("User [" + username + "] not found");
 			throw new LoginFailedException();
 		}
 
-		Map<String, List<String>> clientConfig = DBConfigUtility.loadDbConfig("client");
+		Config clientConfig = Config.loadByName("client");
 
 		String userHost = RequestUtility.getStringValue(request, "userHost", null);
 		if (userHost != null) {
-			Map<String, List<String>> hostConfig = DBConfigUtility.loadDbConfig("client" + "." + userHost);
+			Config hostConfig = Config.loadByName("client" + "." + userHost);
 
 			for (Entry<String, List<String>> entry : hostConfig.entrySet()) {
 				if (!clientConfig.containsKey(entry.getKey())) {

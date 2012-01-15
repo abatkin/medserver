@@ -7,19 +7,17 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-import net.batkin.med.server.dataModel.Session;
-import net.batkin.med.server.dataModel.Session.SessionCreator;
-import net.batkin.med.server.dataModel.User;
-import net.batkin.med.server.db.DBAccess;
-import net.batkin.med.server.db.DBAccess.DatabaseCollection;
-import net.batkin.med.server.db.DBUserUtility;
+import net.batkin.med.server.db.dataModel.Session;
+import net.batkin.med.server.db.dataModel.Session.SessionCreator;
+import net.batkin.med.server.db.dataModel.User;
+import net.batkin.med.server.db.utility.DBAccess;
+import net.batkin.med.server.db.utility.DBAccess.DatabaseCollection;
 import net.batkin.med.server.exception.ServerDataException;
 
 import org.bson.types.ObjectId;
 import org.slf4j.LoggerFactory;
 
 import com.mongodb.BasicDBObject;
-import com.mongodb.DBCollection;
 import com.mongodb.DBObject;
 import com.mongodb.WriteResult;
 
@@ -72,7 +70,7 @@ public class SessionManagerThread implements Runnable {
 				if (!data.isValid(getOldestDate())) {
 					expireds.add(data);
 				} else if (data.isDirty()) {
-					dirtys.add(data.clone());
+					dirtys.add(data);
 				}
 			}
 
@@ -81,81 +79,53 @@ public class SessionManagerThread implements Runnable {
 			}
 		}
 
-		DBCollection collection = DBAccess.getCollection(DatabaseCollection.Sessions);
 		for (SessionData data : expireds) {
-			removeDbSession(collection, data);
+			removeDbSession(data);
 		}
 		for (SessionData data : dirtys) {
-			touchDbSession(collection, data);
+			touchDbSession(data);
 		}
-		removeOldDbSessions(collection);
+		removeOldDbSessions();
 	}
 
-	private void removeOldDbSessions(DBCollection collection) {
+	private void removeOldDbSessions() {
 		BasicDBObject query = new BasicDBObject("lastUpdatedAt", new BasicDBObject("$lt", getOldestDate()));
-		WriteResult result = collection.remove(query);
+		WriteResult result = DBAccess.getCollection(DatabaseCollection.Sessions).remove(query);
 		if (result != null) {
 			LoggerFactory.getLogger(SessionManagerThread.class).info("Removed " + result.getN() + " stale (uncached) sessions");
 		}
 	}
 
-	private void removeDbSession(DBCollection collection, SessionData data) {
+	private void removeDbSession(SessionData data) {
 		ObjectId sessionId = data.getSessionId();
 		LoggerFactory.getLogger(SessionManagerThread.class).info("Destroying session [" + sessionId + "]");
-		collection.remove(new BasicDBObject("_id", sessionId));
+		DBAccess.getCollection(DatabaseCollection.Sessions).remove(new BasicDBObject("_id", sessionId));
 	}
 
-	private DBObject loadDbSession(DBCollection collection, ObjectId sessionId) {
-		DBObject session = collection.findOne(new BasicDBObject("_id", sessionId));
-		return session;
-	}
-
-	private void touchDbSession(DBCollection collection, SessionData data) {
+	private void touchDbSession(SessionData data) {
 		ObjectId sessionId = data.getSessionId();
 		LoggerFactory.getLogger(SessionManagerThread.class).info("Touching session [" + sessionId + "]");
-		DBObject session = loadDbSession(collection, sessionId);
-		if (session == null) {
+		Session dbSession = null;
+		try {
+			dbSession = Session.loadBySessionId(sessionId);
+		} catch (ServerDataException e) {
+			// Ignore
+		}
+
+		if (dbSession == null) {
 			synchronized (this) {
 				sessionMap.remove(sessionId);
 			}
 			return;
 		}
 
-		Object lastUpdatedObj = session.get("lastUpdatedAt");
-		if (lastUpdatedObj == null || !(lastUpdatedObj instanceof Date)) {
-			synchronized (this) {
-				sessionMap.remove(sessionId);
-			}
-			return;
-		}
-
-		Date oldLastUpdated = (Date) lastUpdatedObj;
-		Date newLastUpdated = data.getLastTouched();
+		Date oldLastUpdated = dbSession.getLastUpdatedAt();
+		Date newLastUpdated = data.getLastUpdatedAt();
 		if (oldLastUpdated.after(newLastUpdated)) {
 			return;
 		}
 
-		session.put("lastUpdatedAt", newLastUpdated);
-		collection.save(session);
-	}
-
-	private SessionData loadSession(ObjectId sessionId) {
-		DBObject dbSession = loadDbSession(DBAccess.getCollection(DatabaseCollection.Sessions), sessionId);
-		if (dbSession == null) {
-			return null;
-		}
-
-		try {
-			Session session = new Session(dbSession);
-
-			SessionData sessionData = new SessionData(session);
-			synchronized (this) {
-				sessionMap.put(sessionData.getSessionId(), sessionData);
-			}
-			return sessionData;
-		} catch (ServerDataException e) {
-			return null;
-		}
+		DBAccess.getCollection(DatabaseCollection.Sessions).save(data.getSession().toBson());
 	}
 
 	public SessionData createSession(ObjectId userId) throws ServerDataException {
@@ -170,35 +140,43 @@ public class SessionManagerThread implements Runnable {
 		return sessionData;
 	}
 
-	public User validateSession(ObjectId sessionId) throws ServerDataException {
+	private SessionData getSessionData(ObjectId sessionId) {
 		SessionData data = null;
 		synchronized (this) {
 			data = sessionMap.get(sessionId);
 		}
 
 		if (data == null) {
-			data = loadSession(sessionId);
+			try {
+				Session session = Session.loadBySessionId(sessionId);
+
+				SessionData sessionData = new SessionData(session);
+				synchronized (this) {
+					sessionMap.put(sessionData.getSessionId(), sessionData);
+				}
+				return sessionData;
+			} catch (ServerDataException e) {
+				// Ignore
+			}
 		}
 
-		synchronized (this) {
-			if (data != null && data.isValid(getOldestDate())) {
-				data.touch();
-				ObjectId userId = data.getUserId();
-				return DBUserUtility.loadUserById(userId);
-			}
+		return data;
+
+	}
+
+	public User validateSession(ObjectId sessionId) throws ServerDataException {
+		SessionData data = getSessionData(sessionId);
+
+		if (data != null && data.isValid(getOldestDate())) {
+			data.touch();
+			ObjectId userId = data.getUserId();
+			return User.loadUserById(userId);
 		}
 		return null;
 	}
 
 	public void invalidateSession(ObjectId sessionId) {
-		SessionData data = null;
-		synchronized (this) {
-			data = sessionMap.get(sessionId);
-		}
-
-		if (data == null) {
-			data = loadSession(sessionId);
-		}
+		SessionData data = getSessionData(sessionId);
 
 		synchronized (this) {
 			if (data == null || !data.isValid(getOldestDate())) {

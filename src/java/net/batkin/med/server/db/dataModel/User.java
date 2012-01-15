@@ -1,17 +1,24 @@
-package net.batkin.med.server.dataModel;
+package net.batkin.med.server.db.dataModel;
 
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import net.batkin.med.server.db.utility.DBAccess;
 import net.batkin.med.server.db.utility.MapValueParser;
+import net.batkin.med.server.db.utility.DBAccess.DatabaseCollection;
 import net.batkin.med.server.exception.ServerDataException;
 
 import org.bson.BSONObject;
 import org.bson.types.ObjectId;
 
-public class User extends DataModel {
+import com.mongodb.BasicDBObject;
+import com.mongodb.DBCollection;
+import com.mongodb.DBObject;
+
+public class User extends DbDataModel {
+
 	private ObjectId id;
 	private String username;
 	private String fullName;
@@ -89,6 +96,34 @@ public class User extends DataModel {
 		} else if (!username.equals(other.username))
 			return false;
 		return true;
+	}
+
+	// Finder Methods
+
+	public static User loadUserByUsername(String username) throws ServerDataException {
+		DBCollection c = DBAccess.getCollection(DatabaseCollection.Users);
+		DBObject userCriteria = new BasicDBObject();
+		userCriteria.put("userName", username);
+		DBObject obj = c.findOne(userCriteria);
+		if (obj == null) {
+			return null;
+		}
+
+		User user = new User(obj);
+		return user;
+	}
+
+	public static User loadUserById(ObjectId userId) throws ServerDataException {
+		DBCollection c = DBAccess.getCollection(DatabaseCollection.Users);
+		DBObject server = new BasicDBObject();
+		server.put("_id", userId);
+		DBObject obj = c.findOne(server);
+		if (obj == null) {
+			return null;
+		}
+
+		User user = new User(obj);
+		return user;
 	}
 
 }

@@ -1,11 +1,11 @@
-package net.batkin.med.server.dataModel;
+package net.batkin.med.server.db.dataModel;
 
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import net.batkin.med.server.db.DBAccess;
-import net.batkin.med.server.db.DBAccess.DatabaseCollection;
+import net.batkin.med.server.db.utility.DBAccess;
+import net.batkin.med.server.db.utility.DBAccess.DatabaseCollection;
 import net.batkin.med.server.exception.ServerDataException;
 
 import org.bson.BSONObject;
@@ -15,7 +15,7 @@ import com.mongodb.BasicDBObject;
 import com.mongodb.DBCollection;
 import com.mongodb.DBObject;
 
-public abstract class DataModel {
+public abstract class DbDataModel {
 
 	public static ObjectId getObjectIdValue(BSONObject obj, String name) throws ServerDataException {
 		if (!obj.containsField(name)) {

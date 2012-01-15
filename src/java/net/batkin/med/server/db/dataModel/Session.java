@@ -1,7 +1,9 @@
-package net.batkin.med.server.dataModel;
+package net.batkin.med.server.db.dataModel;
 
 import java.util.Date;
 
+import net.batkin.med.server.db.utility.DBAccess;
+import net.batkin.med.server.db.utility.DBAccess.DatabaseCollection;
 import net.batkin.med.server.exception.ServerDataException;
 
 import org.bson.BSONObject;
@@ -10,7 +12,8 @@ import org.bson.types.ObjectId;
 import com.mongodb.BasicDBObject;
 import com.mongodb.DBObject;
 
-public class Session extends DataModel {
+public class Session extends DbDataModel {
+
 	private ObjectId sessionId;
 	private ObjectId userId;
 	private Date createdAt;
@@ -21,6 +24,10 @@ public class Session extends DataModel {
 		userId = getObjectIdValue(obj, "userId");
 		createdAt = getDateValue(obj, "createdAt");
 		lastUpdatedAt = getDateValue(obj, "lastUpdatedAt");
+	}
+
+	public void setLastUpdatedAt(Date lastUpdatedAt) {
+		this.lastUpdatedAt = lastUpdatedAt;
 	}
 
 	public ObjectId getSessionId() {
@@ -43,6 +50,16 @@ public class Session extends DataModel {
 		return new SessionCreator(userId);
 	}
 
+	public DBObject toBson() {
+		BasicDBObject obj = new BasicDBObject();
+		Date now = new Date();
+		obj.put("_id", sessionId);
+		obj.put("userId", userId);
+		obj.put("createdAt", now);
+		obj.put("lastUpdatedAt", now);
+		return obj;
+	}
+
 	public static class SessionCreator {
 		private ObjectId userId;
 
@@ -62,5 +79,13 @@ public class Session extends DataModel {
 		public Session getSession(DBObject response) throws ServerDataException {
 			return new Session(response);
 		}
+	}
+
+	public static Session loadBySessionId(ObjectId sessionId) throws ServerDataException {
+		DBObject session = DBAccess.getCollection(DatabaseCollection.Sessions).findOne(new BasicDBObject("_id", sessionId));
+		if (session != null) {
+			return new Session(session);
+		}
+		return null;
 	}
 }

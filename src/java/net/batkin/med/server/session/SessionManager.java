@@ -2,7 +2,7 @@ package net.batkin.med.server.session;
 
 import net.batkin.med.server.configuration.Configuration;
 import net.batkin.med.server.configuration.ConfigurationOption;
-import net.batkin.med.server.dataModel.User;
+import net.batkin.med.server.db.dataModel.User;
 import net.batkin.med.server.exception.ServerDataException;
 
 import org.bson.types.ObjectId;

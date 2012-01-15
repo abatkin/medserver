@@ -4,7 +4,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import net.batkin.med.server.dataModel.DataModel;
+import net.batkin.med.server.db.dataModel.DbDataModel;
 import net.batkin.med.server.exception.ServerDataException;
 
 import org.bson.BSONObject;
@@ -26,13 +26,13 @@ public class MapValueParser {
 	public static <T> Map<String, T> getArrayMap(BSONObject parentObj, String name, String keyName, MapValueHandler<T> valueCreator) throws ServerDataException {
 		Map<String, T> valueMap = new HashMap<String, T>();
 
-		List<BSONObject> valueObjects = DataModel.getOptionalArrayValue(parentObj, name, BSONObject.class);
+		List<BSONObject> valueObjects = DbDataModel.getOptionalArrayValue(parentObj, name, BSONObject.class);
 		if (valueObjects == null) {
 			return valueCreator.getMissingMap();
 		}
 
 		for (BSONObject valueObject : valueObjects) {
-			String key = DataModel.getStringValue(valueObject, keyName);
+			String key = DbDataModel.getStringValue(valueObject, keyName);
 			T realValue = valueCreator.getValue(valueObject);
 			valueMap.put(key, realValue);
 		}

@@ -4,7 +4,7 @@ import javax.servlet.http.Cookie;
 
 import net.batkin.med.server.controllers.exception.InvalidSessionException;
 import net.batkin.med.server.controllers.exception.NotLoggedInException;
-import net.batkin.med.server.dataModel.User;
+import net.batkin.med.server.db.dataModel.User;
 import net.batkin.med.server.exception.ControllerException;
 import net.batkin.med.server.http.JsonController;
 import net.batkin.med.server.http.RequestContext;

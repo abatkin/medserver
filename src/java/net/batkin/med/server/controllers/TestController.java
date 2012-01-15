@@ -1,6 +1,6 @@
 package net.batkin.med.server.controllers;
 
-import net.batkin.med.server.dataModel.User;
+import net.batkin.med.server.db.dataModel.User;
 import net.batkin.med.server.exception.ControllerException;
 import net.batkin.med.server.http.RequestContext;
 

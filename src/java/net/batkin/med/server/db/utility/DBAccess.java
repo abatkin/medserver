@@ -1,4 +1,4 @@
-package net.batkin.med.server.db;
+package net.batkin.med.server.db.utility;
 
 import net.batkin.med.server.configuration.Configuration;
 import net.batkin.med.server.configuration.ConfigurationOption;
