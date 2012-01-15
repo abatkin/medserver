@@ -1,4 +1,4 @@
-package net.batkin.med.server.http;
+package net.batkin.med.server.json.response;
 
 import java.util.Collection;
 import java.util.List;
@@ -10,7 +10,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
 
-public class ResponseUtility {
+public class ClientResponse {
 
 	public static JsonElement toJsonMapToListOfStrings(Map<String, List<String>> map) {
 		JsonObject obj = new JsonObject();

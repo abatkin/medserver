@@ -1,4 +1,4 @@
-package net.batkin.med.server.http;
+package net.batkin.med.server.json.request;
 
 import net.batkin.med.server.exception.ClientRequestException;
 import net.batkin.med.server.exception.ControllerException;
@@ -6,7 +6,7 @@ import net.batkin.med.server.exception.ControllerException;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
-public class RequestUtility {
+public class ClientRequest {
 
 	public static String getStringValue(JsonObject obj, String name) throws ControllerException {
 		JsonElement el = obj.get(name);

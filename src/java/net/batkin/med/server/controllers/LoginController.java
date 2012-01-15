@@ -1,19 +1,20 @@
 package net.batkin.med.server.controllers;
 
 import java.util.List;
-import java.util.Map.Entry;
+import java.util.Map;
 
 import javax.servlet.http.Cookie;
 
 import net.batkin.med.server.controllers.exception.LoginFailedException;
-import net.batkin.med.server.db.dataModel.Config;
 import net.batkin.med.server.db.dataModel.User;
 import net.batkin.med.server.exception.ControllerException;
 import net.batkin.med.server.http.JsonController;
 import net.batkin.med.server.http.RequestContext;
-import net.batkin.med.server.http.RequestUtility;
-import net.batkin.med.server.http.ResponseUtility;
+import net.batkin.med.server.json.request.ClientRequest;
+import net.batkin.med.server.json.request.LoginRequest;
+import net.batkin.med.server.json.response.LoginSuccessResponse;
 import net.batkin.med.server.session.SessionManager;
+import net.batkin.med.server.util.ConfigBuilder;
 
 import org.slf4j.LoggerFactory;
 
@@ -23,44 +24,21 @@ public class LoginController extends JsonController {
 
 	@Override
 	public JsonObject handle(RequestContext context, JsonObject request) throws ControllerException {
-		if (request == null) {
-			LoggerFactory.getLogger(LoginController.class).warn("No request data");
-			throw new LoginFailedException();
-		}
+		LoginRequest loginRequest = new LoginRequest(request);
 
-		String username = RequestUtility.getStringValue(request, "username");
-		User user = User.loadUserByUsername(username);
+		User user = User.loadUserByUsername(loginRequest.getUsername());
 
 		if (user == null) {
-			LoggerFactory.getLogger(LoginController.class).warn("User [" + username + "] not found");
+			LoggerFactory.getLogger(LoginController.class).warn("User [" + loginRequest.getUsername() + "] not found");
 			throw new LoginFailedException();
 		}
 
-		Config clientConfig = Config.loadByName("client");
-
-		String userHost = RequestUtility.getStringValue(request, "userHost", null);
-		if (userHost != null) {
-			Config hostConfig = Config.loadByName("client" + "." + userHost);
-
-			for (Entry<String, List<String>> entry : hostConfig.entrySet()) {
-				if (!clientConfig.containsKey(entry.getKey())) {
-					clientConfig.put(entry.getKey(), entry.getValue());
-				}
-			}
-		}
-
+		String userHost = ClientRequest.getStringValue(request, "userHost", "all");
+		Map<String, List<String>> clientConfig = ConfigBuilder.buildConfigFromDatabase("client." + userHost, "client");
 		String sessionId = SessionManager.getInstance().createSession(user);
 		context.getResponse().addCookie(new Cookie("SessionId", sessionId));
 
-		JsonObject response = new JsonObject();
-
-		response.addProperty("username", username);
-		response.addProperty("fullName", user.getFullName());
-		response.add("permissions", ResponseUtility.toJsonList(user.getPermissions()));
-		response.add("preferences", ResponseUtility.toJsonMapToString(user.getPreferences()));
-		response.add("configuration", ResponseUtility.toJsonMapToListOfStrings(clientConfig));
-
-		return response;
+		return new LoginSuccessResponse(user, clientConfig).toJson();
 	}
 
 }
