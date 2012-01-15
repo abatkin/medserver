@@ -8,7 +8,6 @@ import java.util.Set;
 
 import net.batkin.med.server.db.utility.BsonListCreator;
 import net.batkin.med.server.db.utility.BsonListCreator.BsonValueHandler;
-import net.batkin.med.server.db.utility.DBAccess;
 import net.batkin.med.server.db.utility.DBAccess.DatabaseCollection;
 import net.batkin.med.server.db.utility.MapValueParser;
 import net.batkin.med.server.db.utility.MapValueParser.MapValueHandler;
@@ -34,6 +33,18 @@ public class Config extends DbDataModel implements Map<String, List<String>> {
 		this.values = MapValueParser.getArrayMap(config, "values", "name", CONFIG_VALUE_PARSER);
 	}
 
+	private Config(ObjectId id, String name, Map<String, List<String>> values) {
+		this.id = id;
+		this.name = name;
+		this.values = values;
+	}
+
+	public static Config createAndSaveNewConfig(String name, Map<String, List<String>> values) {
+		Config config = new Config(new ObjectId(), name, values);
+		DatabaseCollection.Configs.saveObject(config);
+		return config;
+	}
+
 	public DBObject toDbObject() {
 		DBObject obj = new BasicDBObject();
 
@@ -53,6 +64,11 @@ public class Config extends DbDataModel implements Map<String, List<String>> {
 				bsonObject.put("values", list);
 			}
 		});
+	}
+
+	@Override
+	public ObjectId getObjectId() {
+		return id;
 	}
 
 	public String getName() {
@@ -167,7 +183,7 @@ public class Config extends DbDataModel implements Map<String, List<String>> {
 	};
 
 	public static Config loadByName(String configName) throws ServerDataException {
-		DBObject config = DbDataModel.findDbObject(DatabaseCollection.Configs, "configName", configName, false);
+		DBObject config = DatabaseCollection.Configs.findByString("configName", configName);
 		if (config == null) {
 			return null;
 		}
@@ -178,7 +194,7 @@ public class Config extends DbDataModel implements Map<String, List<String>> {
 	public static List<String> listConfigNames() {
 		List<String> configNames = new ArrayList<String>();
 
-		DBCursor cursor = DBAccess.getCollection(DatabaseCollection.Configs).find(new BasicDBObject(), new BasicDBObject("configName", Integer.valueOf(1)));
+		DBCursor cursor = DatabaseCollection.Configs.findWithFields(new BasicDBObject(), "configName");
 		while (cursor.hasNext()) {
 			DBObject obj = cursor.next();
 			Object configNameObj = obj.get("configName");

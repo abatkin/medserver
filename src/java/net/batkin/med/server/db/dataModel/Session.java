@@ -2,7 +2,6 @@ package net.batkin.med.server.db.dataModel;
 
 import java.util.Date;
 
-import net.batkin.med.server.db.utility.DBAccess;
 import net.batkin.med.server.db.utility.DBAccess.DatabaseCollection;
 import net.batkin.med.server.exception.ServerDataException;
 
@@ -30,7 +29,8 @@ public class Session extends DbDataModel {
 		this.lastUpdatedAt = lastUpdatedAt;
 	}
 
-	public ObjectId getSessionId() {
+	@Override
+	public ObjectId getObjectId() {
 		return sessionId;
 	}
 
@@ -81,8 +81,8 @@ public class Session extends DbDataModel {
 		}
 	}
 
-	public static Session loadBySessionId(ObjectId sessionId) throws ServerDataException {
-		DBObject session = DBAccess.getCollection(DatabaseCollection.Sessions).findOne(new BasicDBObject("_id", sessionId));
+	public static Session findBySessionId(ObjectId sessionId) throws ServerDataException {
+		DBObject session = DatabaseCollection.Sessions.findById(sessionId);
 		if (session != null) {
 			return new Session(session);
 		}

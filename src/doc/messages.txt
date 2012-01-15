@@ -78,3 +78,61 @@ Returns the data for the config named "configName"
 		...
 	] 
 }
+
+POST to /config/{configName}
+Replace the configuration "configName" with the data sent by the client
+{
+	configName: ...,
+	values: [
+		{name: "...", values: ["...", ...]},
+		...
+	] 
+}
+
+DELETE to /config/{configName}
+Delete the config "configName"
+
+== Users ==
+GET to /users
+List users:
+{
+	users: [
+		{username: "...", fullName: "..."},
+		...
+	]
+}
+
+GET to /users/{userName}
+Get information for user "userName":
+{
+	username: "...",
+	fullName: "...",
+	permissions: [
+		"permission1",
+		...
+	],
+	preferences: [
+		{name: "name", value: "value"},
+		...
+	]
+}
+
+DELETE to /users/{userName}
+Delete user "userName"
+
+POST to /users/{userName}/updateInfo:
+{
+	username: "...",
+	fullName: "newFullName"
+}
+
+POST to /users/{userName}/updatePermissions:
+{
+	username: "...",
+	addPermission: "name"
+	//or
+	removePermission: "name"
+}
+
+Both POST requests return the new state of the user (same as /users/{userName})
+

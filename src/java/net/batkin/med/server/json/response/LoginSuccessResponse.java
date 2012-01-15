@@ -18,14 +18,11 @@ public class LoginSuccessResponse extends ClientResponse {
 	}
 
 	public JsonObject toJson() {
-		JsonObject response = new JsonObject();
-
-		response.addProperty("username", user.getUsername());
-		response.addProperty("fullName", user.getFullName());
-		response.add("permissions", toJsonList(user.getPermissions()));
-		response.add("preferences", toJsonMapToString(user.getPreferences(), "name", "value"));
+		JsonObject response = UserDetailResponse.buildBasicUserObject(user, true);
 		response.add("configuration", toJsonMapToListOfStrings(clientConfig, "name", "values"));
 
 		return response;
 	}
+
+
 }

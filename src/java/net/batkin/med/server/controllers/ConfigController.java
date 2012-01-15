@@ -4,7 +4,6 @@ import java.util.List;
 
 import net.batkin.med.server.db.dataModel.Config;
 import net.batkin.med.server.db.dataModel.User;
-import net.batkin.med.server.db.utility.DBAccess;
 import net.batkin.med.server.db.utility.DBAccess.DatabaseCollection;
 import net.batkin.med.server.exception.ClientRequestException;
 import net.batkin.med.server.exception.ControllerException;
@@ -48,7 +47,7 @@ public class ConfigController extends LoggedInController {
 		if (config == null) {
 			return buildGenericResponse(false, "Config [" + configName + "] not found", ErrorCodes.ERROR_CODE_CONFIG_NOT_FOUND);
 		}
-		DBAccess.getCollection(DatabaseCollection.Configs).remove(config.toDbObject());
+		DatabaseCollection.Configs.deleteObject(config);
 		return buildSuccessResponse();
 	}
 
@@ -57,16 +56,15 @@ public class ConfigController extends LoggedInController {
 		if (configName.equals(ucRequest.getConfigName())) {
 			throw new ClientRequestException("URI configName and request configName mismatch");
 		}
-		
+
 		Config config = Config.loadByName(configName);
-		if (config == null) {
-			return buildGenericResponse(false, "Config [" + configName + "] not found", ErrorCodes.ERROR_CODE_CONFIG_NOT_FOUND);
+		if (config != null) {
+			config.replaceValues(ucRequest.getValues());
+			DatabaseCollection.Configs.saveObject(config);
+		} else {
+			Config.createAndSaveNewConfig(configName, ucRequest.getValues());
 		}
-		
-		config.replaceValues(ucRequest.getValues());
-		
-		DBAccess.getCollection(DatabaseCollection.Configs).save(config.toDbObject());
-		
+
 		return buildSuccessResponse();
 	}
 

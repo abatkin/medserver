@@ -21,7 +21,7 @@ public class SessionData implements Cloneable {
 	}
 
 	public ObjectId getSessionId() {
-		return session.getSessionId();
+		return session.getObjectId();
 	}
 
 	public ObjectId getUserId() {

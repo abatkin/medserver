@@ -34,7 +34,7 @@ public class SessionManager {
 	}
 
 	public String createSession(User user) throws ServerDataException {
-		ObjectId userId = user.getId();
+		ObjectId userId = user.getObjectId();
 		return sessionManagerThread.createSession(userId).getSessionId().toStringMongod();
 	}
 

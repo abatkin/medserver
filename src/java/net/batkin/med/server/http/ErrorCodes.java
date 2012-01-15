@@ -11,4 +11,5 @@ public class ErrorCodes {
 	public static final int ERROR_CODE_INVALID_SESSION = 7;
 	public static final int ERROR_CODE_FORBIDDEN = 8;
 	public static final int ERROR_CODE_CONFIG_NOT_FOUND = 9;
+	public static final int ERROR_CODE_USER_NOT_FOUND = 10;
 }

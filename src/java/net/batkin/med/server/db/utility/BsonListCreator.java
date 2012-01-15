@@ -8,6 +8,16 @@ import org.bson.BasicBSONObject;
 import org.bson.types.BasicBSONList;
 
 public class BsonListCreator {
+
+	public static BasicBSONList createSimpleList(Map<String, String> map) {
+		return BsonListCreator.createList(map, "name", new BsonValueHandler<String>() {
+			@Override
+			public void populateBsonObject(BSONObject bsonObject, String valueObject) {
+				bsonObject.put("value", valueObject);
+			}
+		});
+	}
+
 	public static <T> BasicBSONList createList(Map<String, T> map, String keyName, BsonValueHandler<T> valueHandler) {
 		BasicBSONList list = new BasicBSONList();
 

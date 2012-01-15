@@ -4,19 +4,18 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import net.batkin.med.server.db.utility.DBAccess;
-import net.batkin.med.server.db.utility.DBAccess.DatabaseCollection;
 import net.batkin.med.server.exception.ServerDataException;
 
 import org.bson.BSONObject;
 import org.bson.types.ObjectId;
 
-import com.mongodb.BasicDBObject;
-import com.mongodb.DBCollection;
 import com.mongodb.DBObject;
 
 public abstract class DbDataModel {
 
+	public abstract ObjectId getObjectId();
+	public abstract DBObject toDbObject();
+	
 	public static ObjectId getObjectIdValue(BSONObject obj, String name) throws ServerDataException {
 		if (!obj.containsField(name)) {
 			throw new ServerDataException("Missing BSON attribute (ObjectId) " + name);
@@ -95,14 +94,5 @@ public abstract class DbDataModel {
 			throw new ServerDataException("BSON Attribute " + name + " should be a BSONObject");
 		}
 		return (BSONObject) property;
-	}
-
-	public static DBObject findDbObject(DatabaseCollection collection, String key, Object value, boolean required) throws ServerDataException {
-		DBCollection c = DBAccess.getCollection(collection);
-		DBObject obj = c.findOne(new BasicDBObject(key, value));
-		if (obj == null && required) {
-			throw new ServerDataException("Unable to find " + collection + "." + key + "=" + value);
-		}
-		return obj;
 	}
 }

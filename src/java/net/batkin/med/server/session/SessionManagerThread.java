@@ -90,7 +90,7 @@ public class SessionManagerThread implements Runnable {
 
 	private void removeOldDbSessions() {
 		BasicDBObject query = new BasicDBObject("lastUpdatedAt", new BasicDBObject("$lt", getOldestDate()));
-		WriteResult result = DBAccess.getCollection(DatabaseCollection.Sessions).remove(query);
+		WriteResult result = DatabaseCollection.Sessions.removeByQuery(query);
 		if (result != null) {
 			LoggerFactory.getLogger(SessionManagerThread.class).info("Removed " + result.getN() + " stale (uncached) sessions");
 		}
@@ -99,7 +99,7 @@ public class SessionManagerThread implements Runnable {
 	private void removeDbSession(SessionData data) {
 		ObjectId sessionId = data.getSessionId();
 		LoggerFactory.getLogger(SessionManagerThread.class).info("Destroying session [" + sessionId + "]");
-		DBAccess.getCollection(DatabaseCollection.Sessions).remove(new BasicDBObject("_id", sessionId));
+		DatabaseCollection.Sessions.deleteObject(data.getSession());
 	}
 
 	private void touchDbSession(SessionData data) {
@@ -107,7 +107,7 @@ public class SessionManagerThread implements Runnable {
 		LoggerFactory.getLogger(SessionManagerThread.class).info("Touching session [" + sessionId + "]");
 		Session dbSession = null;
 		try {
-			dbSession = Session.loadBySessionId(sessionId);
+			dbSession = Session.findBySessionId(sessionId);
 		} catch (ServerDataException e) {
 			// Ignore
 		}
@@ -125,13 +125,13 @@ public class SessionManagerThread implements Runnable {
 			return;
 		}
 
-		DBAccess.getCollection(DatabaseCollection.Sessions).save(data.getSession().toDbObject());
+		DatabaseCollection.Sessions.saveObject(data.getSession());
 	}
 
 	public SessionData createSession(ObjectId userId) throws ServerDataException {
 		SessionCreator creator = Session.createSession(userId);
 		DBObject sessionObject = creator.toDBObject();
-		DBAccess.getCollection(DatabaseCollection.Sessions).save(sessionObject);
+		DatabaseCollection.Sessions.saveDbObject(sessionObject);
 		Session session = creator.getSession(sessionObject);
 		SessionData sessionData = new SessionData(session);
 		synchronized (this) {
@@ -148,7 +148,7 @@ public class SessionManagerThread implements Runnable {
 
 		if (data == null) {
 			try {
-				Session session = Session.loadBySessionId(sessionId);
+				Session session = Session.findBySessionId(sessionId);
 
 				SessionData sessionData = new SessionData(session);
 				synchronized (this) {
