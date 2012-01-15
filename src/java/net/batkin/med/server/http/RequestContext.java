@@ -5,10 +5,12 @@ import javax.servlet.http.HttpServletResponse;
 
 import net.batkin.med.server.exception.ControllerException;
 import net.batkin.med.server.exception.FileNotFoundException;
+import net.batkin.med.server.http.Controller.RequestMethod;
 
 import org.eclipse.jetty.server.Request;
 
 public class RequestContext {
+	private RequestMethod requestMethod;
 	private String[] parts;
 	private Request baseRequest;
 	private HttpServletRequest request;
@@ -26,6 +28,12 @@ public class RequestContext {
 			throw new FileNotFoundException();
 		}
 		this.parts = parts;
+
+		try {
+			this.requestMethod = RequestMethod.valueOf(request.getMethod());
+		} catch (Exception e) {
+			throw new FileNotFoundException();
+		}
 	}
 
 	public String getControllerName() {
@@ -34,6 +42,10 @@ public class RequestContext {
 
 	public String[] getParts() {
 		return parts;
+	}
+
+	public RequestMethod getRequestMethod() {
+		return requestMethod;
 	}
 
 	public Request getBaseRequest() {

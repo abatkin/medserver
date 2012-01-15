@@ -9,6 +9,8 @@ import net.batkin.med.server.exception.ClientRequestException;
 import net.batkin.med.server.exception.ControllerException;
 import net.batkin.med.server.exception.FileNotFoundException;
 import net.batkin.med.server.exception.ServerDataException;
+import net.batkin.med.server.http.Controller.ControllerMapping;
+import net.batkin.med.server.http.Controller.RequestMethod;
 import net.batkin.med.server.http.ErrorCodes;
 import net.batkin.med.server.http.RequestContext;
 import net.batkin.med.server.json.request.UpdateConfigRequest;
@@ -17,6 +19,7 @@ import net.batkin.med.server.json.response.ConfigListResponse;
 
 import com.google.gson.JsonObject;
 
+@ControllerMapping(prefix = "config", requestMethods = { RequestMethod.GET, RequestMethod.POST, RequestMethod.DELETE })
 public class ConfigController extends LoggedInController {
 
 	@Override
@@ -29,14 +32,14 @@ public class ConfigController extends LoggedInController {
 		} else {
 			String configName = parts[1];
 
-			String requestMethod = context.getRequest().getMethod();
-			if (requestMethod.equals("GET")) {
+			switch (context.getRequestMethod()) {
+			case GET:
 				return getConfigJson(configName);
-			} else if (requestMethod.equals("POST")) {
+			case POST:
 				return updateConfig(configName, request);
-			} else if (requestMethod.equals("DELETE")) {
+			case DELETE:
 				return deleteConfig(configName);
-			} else {
+			default:
 				throw new FileNotFoundException();
 			}
 		}

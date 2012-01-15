@@ -9,11 +9,14 @@ import net.batkin.med.server.configuration.Configuration.ConfigurationSource;
 import net.batkin.med.server.exception.ControllerException;
 import net.batkin.med.server.http.JsonController;
 import net.batkin.med.server.http.RequestContext;
+import net.batkin.med.server.http.Controller.ControllerMapping;
+import net.batkin.med.server.http.Controller.RequestMethod;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
 
+@ControllerMapping(prefix = "status", requestMethods = { RequestMethod.GET })
 public class StatusController extends JsonController {
 
 	@Override

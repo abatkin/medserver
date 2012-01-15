@@ -4,12 +4,15 @@ import net.batkin.med.server.exception.ControllerException;
 import net.batkin.med.server.http.JsonController;
 import net.batkin.med.server.http.RequestContext;
 import net.batkin.med.server.http.RestHandler;
+import net.batkin.med.server.http.Controller.ControllerMapping;
+import net.batkin.med.server.http.Controller.RequestMethod;
 import net.batkin.med.server.session.SessionManager;
 
 import org.slf4j.LoggerFactory;
 
 import com.google.gson.JsonObject;
 
+@ControllerMapping(prefix = "shutdown", requestMethods = { RequestMethod.POST })
 public class ShutdownController extends JsonController {
 
 	private RestHandler server;

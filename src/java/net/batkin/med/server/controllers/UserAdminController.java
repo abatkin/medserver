@@ -11,6 +11,8 @@ import net.batkin.med.server.exception.FileNotFoundException;
 import net.batkin.med.server.exception.ServerDataException;
 import net.batkin.med.server.http.ErrorCodes;
 import net.batkin.med.server.http.RequestContext;
+import net.batkin.med.server.http.Controller.ControllerMapping;
+import net.batkin.med.server.http.Controller.RequestMethod;
 import net.batkin.med.server.json.request.UpdateUserPermissionsRequest;
 import net.batkin.med.server.json.request.UpdateUserRequest;
 import net.batkin.med.server.json.response.UserDetailResponse;
@@ -18,20 +20,21 @@ import net.batkin.med.server.json.response.UserListResponse;
 
 import com.google.gson.JsonObject;
 
+@ControllerMapping(prefix = "users", requestMethods = { RequestMethod.GET, RequestMethod.POST, RequestMethod.DELETE })
 public class UserAdminController extends LoggedInController {
 
 	@Override
 	public JsonObject handle(RequestContext context, User user, JsonObject request) throws ControllerException {
 		ensurePermission(user, Permissions.Admin);
 
-		String requestMethod = context.getRequest().getMethod();
-		if (requestMethod.equals("GET")) {
+		switch (context.getRequestMethod()) {
+		case GET:
 			return doGet(context, user);
-		} else if (requestMethod.equals("POST")) {
+		case POST:
 			return doPost(context, user, request);
-		} else if (requestMethod.equals("DELETE")) {
+		case DELETE:
 			return doDelete(context, user, request);
-		} else {
+		default:
 			throw new FileNotFoundException();
 		}
 	}

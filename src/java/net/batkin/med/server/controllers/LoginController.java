@@ -10,6 +10,8 @@ import net.batkin.med.server.db.dataModel.User;
 import net.batkin.med.server.exception.ControllerException;
 import net.batkin.med.server.http.JsonController;
 import net.batkin.med.server.http.RequestContext;
+import net.batkin.med.server.http.Controller.ControllerMapping;
+import net.batkin.med.server.http.Controller.RequestMethod;
 import net.batkin.med.server.json.request.ClientRequest;
 import net.batkin.med.server.json.request.LoginRequest;
 import net.batkin.med.server.json.response.LoginSuccessResponse;
@@ -20,6 +22,7 @@ import org.slf4j.LoggerFactory;
 
 import com.google.gson.JsonObject;
 
+@ControllerMapping(prefix = "login", requestMethods = { RequestMethod.POST })
 public class LoginController extends JsonController {
 
 	@Override
