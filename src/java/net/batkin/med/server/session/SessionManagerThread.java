@@ -10,7 +10,6 @@ import java.util.Set;
 import net.batkin.med.server.db.dataModel.Session;
 import net.batkin.med.server.db.dataModel.Session.SessionCreator;
 import net.batkin.med.server.db.dataModel.User;
-import net.batkin.med.server.db.utility.DBAccess;
 import net.batkin.med.server.db.utility.DBAccess.DatabaseCollection;
 import net.batkin.med.server.exception.ServerDataException;
 
