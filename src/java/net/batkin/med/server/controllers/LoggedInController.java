@@ -17,7 +17,7 @@ public abstract class LoggedInController extends JsonController {
 
 	@Override
 	public JsonObject handle(RequestContext context, JsonObject request) throws ControllerException {
-		String sessionId = getSessionId(context);
+		String sessionId = populateSessionId(context);
 		if (sessionId == null) {
 			throw new NotLoggedInException();
 		}
@@ -30,12 +30,14 @@ public abstract class LoggedInController extends JsonController {
 		return handle(context, user, request);
 	}
 
-	private String getSessionId(RequestContext context) {
+	private String populateSessionId(RequestContext context) {
 		Cookie[] cookies = context.getRequest().getCookies();
 		if (cookies != null) {
 			for (Cookie cookie : cookies) {
 				if (cookie.getName().equals("SessionId")) {
-					return cookie.getValue();
+					String sessionId = cookie.getValue();
+					context.setSessionId(sessionId);
+					return sessionId;
 				}
 			}
 		}

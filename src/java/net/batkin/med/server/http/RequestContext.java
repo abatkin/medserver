@@ -10,6 +10,7 @@ import net.batkin.med.server.http.Controller.RequestMethod;
 import org.eclipse.jetty.server.Request;
 
 public class RequestContext {
+	private String sessionId;
 	private RequestMethod requestMethod;
 	private String[] parts;
 	private Request baseRequest;
@@ -60,4 +61,11 @@ public class RequestContext {
 		return response;
 	}
 
+	public void setSessionId(String sessionId) {
+		this.sessionId = sessionId;
+	}
+
+	public String getSessionId() {
+		return sessionId;
+	}
 }

@@ -10,6 +10,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import net.batkin.med.server.controllers.ConfigController;
 import net.batkin.med.server.controllers.LoginController;
+import net.batkin.med.server.controllers.LogoutController;
 import net.batkin.med.server.controllers.ShutdownController;
 import net.batkin.med.server.controllers.StatusController;
 import net.batkin.med.server.controllers.TestController;
@@ -34,6 +35,7 @@ public class RestHandler extends AbstractHandler {
 		addController(new StatusController());
 		addController(new TestController());
 		addController(new LoginController());
+		addController(new LogoutController());
 		addController(new ShutdownController(this));
 		addController(new ConfigController());
 		addController(new UserAdminController());

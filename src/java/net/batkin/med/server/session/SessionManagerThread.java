@@ -182,6 +182,8 @@ public class SessionManagerThread implements Runnable {
 			if (data == null || !data.isValid(getOldestDate())) {
 				return;
 			}
+			
+			data.logout();
 		}
 	}
 
