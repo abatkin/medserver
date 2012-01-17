@@ -62,6 +62,28 @@ public abstract class DbDataModel {
 		return ((Number) property).intValue();
 	}
 
+	public static Integer getOptionalIntegerValue(BSONObject obj, String name) throws ServerDataException {
+		if (!obj.containsField(name)) {
+			return null;
+		}
+		Object property = obj.get(name);
+		if (!(property instanceof Integer)) {
+			throw new ServerDataException("BSON Attribute " + name + " should be an Integer");
+		}
+		return (Integer) property;
+	}
+
+	public static Float getOptionalFloatValue(BSONObject obj, String name) throws ServerDataException {
+		if (!obj.containsField(name)) {
+			return null;
+		}
+		Object property = obj.get(name);
+		if (!(property instanceof Float)) {
+			throw new ServerDataException("BSON Attribute " + name + " should be a Float");
+		}
+		return (Float) property;
+	}
+
 	public static boolean getBooleanValue(BSONObject obj, String name) throws ServerDataException {
 		if (!obj.containsField(name)) {
 			throw new ServerDataException("Missing BSON attribute (Boolean) " + name);
