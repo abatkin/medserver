@@ -14,8 +14,9 @@ import com.mongodb.DBObject;
 public abstract class DbDataModel {
 
 	public abstract ObjectId getObjectId();
+
 	public abstract DBObject toDbObject();
-	
+
 	public static ObjectId getObjectIdValue(BSONObject obj, String name) throws ServerDataException {
 		if (!obj.containsField(name)) {
 			throw new ServerDataException("Missing BSON attribute (ObjectId) " + name);
@@ -48,6 +49,28 @@ public abstract class DbDataModel {
 			throw new ServerDataException("BSON Attribute " + name + " should be a String");
 		}
 		return (String) property;
+	}
+
+	public static int getIntegerValue(BSONObject obj, String name) throws ServerDataException {
+		if (!obj.containsField(name)) {
+			throw new ServerDataException("Missing BSON attribute (Number) " + name);
+		}
+		Object property = obj.get(name);
+		if (!(property instanceof Number)) {
+			throw new ServerDataException("BSON Attribute " + name + " should be a Number");
+		}
+		return ((Number) property).intValue();
+	}
+
+	public static boolean getBooleanValue(BSONObject obj, String name) throws ServerDataException {
+		if (!obj.containsField(name)) {
+			throw new ServerDataException("Missing BSON attribute (Boolean) " + name);
+		}
+		Object property = obj.get(name);
+		if (!(property instanceof Boolean)) {
+			throw new ServerDataException("BSON Attribute " + name + " should be a Boolean");
+		}
+		return ((Boolean) property).booleanValue();
 	}
 
 	public static <T> List<T> getOptionalArrayValue(BSONObject obj, String name, Class<T> elementClass) throws ServerDataException {

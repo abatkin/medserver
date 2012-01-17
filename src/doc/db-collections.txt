@@ -34,7 +34,7 @@ Store all configuration information for both server and clients
 }
 
 == schemas ==
-Form schema information. Patient schema has _id="patient"
+Form schema information. Patient schema has schemaName="patient"
 {
 	schemaName: string (indexed),
 	schemaVersion: integer,
