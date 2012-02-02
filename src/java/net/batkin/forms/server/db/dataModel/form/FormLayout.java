@@ -24,7 +24,7 @@ public class FormLayout extends DbDataModel {
 	private List<FormLink> links;
 	private List<FormSection> sections;
 
-	public FormLayout(FormSchema schema, BSONObject obj) throws ServerDataException {
+	public FormLayout(BSONObject obj) throws ServerDataException {
 		id = getObjectIdValue(obj, "_id");
 		formName = getStringValue(obj, "formName");
 		schemaName = getStringValue(obj, "schemaName");
@@ -35,12 +35,17 @@ public class FormLayout extends DbDataModel {
 			links.add(new FormLink(linkObj));
 		}
 
-		Set<String> fieldNames = new HashSet<String>(schema.getFieldMap().keySet());
-		Set<String> handledNames = new HashSet<String>(schema.getFieldMap().keySet());
 		sections = new ArrayList<FormSection>();
 		for (BSONObject sectionObj : getArrayValue(obj, "sections", BSONObject.class)) {
 			FormSection section = new FormSection(sectionObj);
 			sections.add(section);
+		}
+	}
+
+	public void validateFields(FormSchema schema) throws ServerDataException {
+		Set<String> fieldNames = new HashSet<String>(schema.getFieldMap().keySet());
+		Set<String> handledNames = new HashSet<String>(schema.getFieldMap().keySet());
+		for (FormSection section : sections) {
 			for (String fieldName : section.getFields()) {
 				if (fieldNames.contains(fieldName)) {
 					fieldNames.remove(fieldName);
