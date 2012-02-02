@@ -95,7 +95,7 @@ public class RunServer {
 		staticContext.setHandler(new ResourceHandler());
 
 		ContextHandler formsContext = handler.addContext("/", "/");
-		formsContext.setHandler(new RestHandler());
+		formsContext.setHandler(new RestHandler(""));
 
 		server.setHandler(handler);
 		server.start();

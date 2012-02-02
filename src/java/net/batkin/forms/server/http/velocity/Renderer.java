@@ -13,7 +13,7 @@ public class Renderer {
 	private VelocityEngine ve;
 	private VelocityContext rootContext;
 
-	public Renderer() {
+	public Renderer(String urlBase) {
 		Properties props = new Properties();
 		props.setProperty("input.encoding", "UTF-8");
 		props.setProperty("output.encoding", "UTF-8");
@@ -27,7 +27,7 @@ public class Renderer {
 
 		ve = new VelocityEngine(props);
 		rootContext = new VelocityContext();
-		rootContext.put("h", new Helpers());
+		rootContext.put("h", new Helpers(urlBase));
 	}
 
 	public void renderTemplate(String templateName, TemplateParameters parameters, Writer writer) {

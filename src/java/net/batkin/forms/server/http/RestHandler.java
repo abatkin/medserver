@@ -25,9 +25,9 @@ public class RestHandler extends AbstractHandler {
 	private Map<String, Controller> controllerMap;
 	private Renderer renderer;
 
-	public RestHandler() throws ConfigurationException {
+	public RestHandler(String urlBase) throws ConfigurationException {
 		controllerMap = new HashMap<String, Controller>();
-		renderer = new Renderer();
+		renderer = new Renderer(urlBase);
 		addController(new FormsController());
 	}
 
