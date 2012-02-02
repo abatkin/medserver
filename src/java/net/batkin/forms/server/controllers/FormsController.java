@@ -2,7 +2,7 @@ package net.batkin.forms.server.controllers;
 
 import java.io.IOException;
 
-import net.batkin.forms.server.db.dataModel.FormSchema;
+import net.batkin.forms.server.db.dataModel.schema.FormSchema;
 import net.batkin.forms.server.exception.ControllerException;
 import net.batkin.forms.server.exception.FileNotFoundException;
 import net.batkin.forms.server.http.Controller;

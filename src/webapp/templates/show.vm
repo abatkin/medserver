@@ -2,9 +2,7 @@
 <html lang="en">
   <head>
     <meta charset="utf-8">
-    <title>Bootstrap, from Twitter</title>
-    <meta name="description" content="">
-    <meta name="author" content="">
+    <title>${schema.schemaName}</title>
 
     <!-- Le HTML5 shim, for IE6-8 support of HTML elements -->
     <!--[if lt IE 9]>
@@ -54,19 +52,16 @@
     <div class="container">
 
       <h1>${schema.schemaName}</h1>
-      <p>
-      	<ul>
+      <form class="form-horizontal">
 #foreach($field in $schema.fieldList)
-	#if($field.dataTypeName == "string")
-		<li><b>${field.displayName}</b>: <input type="text" name="${field.fieldName}" value="${field.defaultValue}"/> ${field.helpText}</li>
-	#elseif($field.dataTypeName == "integer")
-		<li><b>${field.displayName}</b>: <input type="text" name="${field.fieldName}" value="${field.defaultValue}"/> ${field.helpText}</li>
-	#elseif($field.dataTypeName == "float")
-		<li><b>${field.displayName}</b>: <input type="text" name="${field.fieldName}" value="${field.defaultValue}"/> ${field.helpText}</li>
-	#end
+      	<div class="control-group">
+      		<label class="control-label" for="${field.fieldName}">${field.displayName}</label>
+      		<div class="controls">
+      			<input class="input-xlarge" type="text" name="${field.fieldName}" id="${field.fieldName}" value="${field.defaultValue}"/>
+      			<p class="help-block">${field.helpText}</p>
+      		</div>
+      	</div>
 #end
-		</ul>
-      </p>
 
     </div> <!-- /container -->
 

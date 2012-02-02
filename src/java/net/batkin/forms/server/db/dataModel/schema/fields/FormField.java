@@ -1,4 +1,4 @@
-package net.batkin.forms.server.db.dataModel.fields;
+package net.batkin.forms.server.db.dataModel.schema.fields;
 
 import net.batkin.forms.server.db.dataModel.DbDataModel;
 import net.batkin.forms.server.exception.ServerDataException;

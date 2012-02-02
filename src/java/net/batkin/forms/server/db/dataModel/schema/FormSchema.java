@@ -1,11 +1,12 @@
-package net.batkin.forms.server.db.dataModel;
+package net.batkin.forms.server.db.dataModel.schema;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import net.batkin.forms.server.db.dataModel.fields.FormField;
+import net.batkin.forms.server.db.dataModel.DbDataModel;
+import net.batkin.forms.server.db.dataModel.schema.fields.FormField;
 import net.batkin.forms.server.db.utility.DBAccess.DatabaseCollection;
 import net.batkin.forms.server.exception.ServerDataException;
 
@@ -73,9 +74,13 @@ public class FormSchema extends DbDataModel {
 	public boolean isActive() {
 		return isActive;
 	}
-	
+
 	public List<FormField<?>> getFieldList() {
 		return fieldList;
+	}
+
+	public Map<String, FormField<?>> getFieldMap() {
+		return fieldMap;
 	}
 
 	public static FormSchema loadByName(String formName) throws ServerDataException {
