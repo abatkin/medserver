@@ -1,7 +1,8 @@
-package net.batkin.forms.server.http;
+package net.batkin.forms.server.http.velocity;
 
 import java.io.Writer;
 import java.util.Properties;
+
 
 import org.apache.velocity.Template;
 import org.apache.velocity.VelocityContext;

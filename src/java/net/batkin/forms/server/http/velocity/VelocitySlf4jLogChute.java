@@ -1,4 +1,4 @@
-package net.batkin.forms.server.http;
+package net.batkin.forms.server.http.velocity;
 
 import org.apache.velocity.runtime.RuntimeServices;
 import org.apache.velocity.runtime.log.LogChute;

@@ -1,4 +1,4 @@
-package net.batkin.forms.server.http;
+package net.batkin.forms.server.http.velocity;
 
 public class Helpers {
 

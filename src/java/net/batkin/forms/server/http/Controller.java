@@ -11,6 +11,7 @@ import java.util.Set;
 import javax.servlet.http.HttpServletResponse;
 
 import net.batkin.forms.server.exception.ControllerException;
+import net.batkin.forms.server.http.velocity.TemplateParameters;
 
 public abstract class Controller {
 

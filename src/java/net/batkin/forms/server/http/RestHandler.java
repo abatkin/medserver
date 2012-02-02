@@ -14,6 +14,7 @@ import net.batkin.forms.server.exception.ControllerException;
 import net.batkin.forms.server.exception.FileNotFoundException;
 import net.batkin.forms.server.http.Controller.ControllerMapping;
 import net.batkin.forms.server.http.Controller.RequestMethod;
+import net.batkin.forms.server.http.velocity.Renderer;
 
 import org.eclipse.jetty.server.Request;
 import org.eclipse.jetty.server.handler.AbstractHandler;

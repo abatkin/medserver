@@ -7,9 +7,9 @@ import net.batkin.forms.server.exception.ControllerException;
 import net.batkin.forms.server.exception.FileNotFoundException;
 import net.batkin.forms.server.http.Controller;
 import net.batkin.forms.server.http.RequestContext;
-import net.batkin.forms.server.http.TemplateParameters;
 import net.batkin.forms.server.http.Controller.ControllerMapping;
 import net.batkin.forms.server.http.Controller.RequestMethod;
+import net.batkin.forms.server.http.velocity.TemplateParameters;
 
 @ControllerMapping(prefix = "form", requestMethods = { RequestMethod.GET, RequestMethod.POST })
 public class FormsController extends Controller {

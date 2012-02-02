@@ -1,6 +1,7 @@
-package net.batkin.forms.server.http;
+package net.batkin.forms.server.http.velocity;
 
-import net.batkin.forms.server.http.Helpers.RawHtml;
+
+import net.batkin.forms.server.http.velocity.Helpers.RawHtml;
 
 import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.velocity.app.event.ReferenceInsertionEventHandler;
