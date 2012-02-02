@@ -49,24 +49,36 @@ public class FormLayout extends DbDataModel {
 		Set<String> fieldNames = schema.getFieldNames();
 		Set<String> handledNames = new HashSet<String>();
 		for (FormSection section : sections) {
-			for (String fieldName : section.getFields()) {
+			for (FormWidget widget : section.getWidgets()) {
+				String fieldName = widget.getName();
 				if (fieldNames.contains(fieldName)) {
 					fieldNames.remove(fieldName);
 					handledNames.add(fieldName);
 				} else if (handledNames.contains(fieldName)) {
-					throw new ServerDataException("Duplicate field " + fieldName + " in form " + formName + " for schema " + schemaName);
+					throw new ServerDataException("Duplicate widget " + fieldName + " in form " + formName + " for schema " + schemaName);
 				} else {
-					throw new ServerDataException("Unknown field " + fieldName + " in form " + formName + " for schema " + schemaName);
+					throw new ServerDataException("Unknown widget " + fieldName + " in form " + formName + " for schema " + schemaName);
 				}
 			}
 		}
 
 		// Just in case there is anything left over
 		if (!fieldNames.isEmpty()) {
-			List<String> fieldList = new ArrayList<String>(fieldNames);
+			List<FormWidget> fieldList = new ArrayList<FormWidget>();
+			for (String fieldName : fieldNames) {
+				String guessedName = guessName(fieldName);
+				FormWidget widget = new FormWidget(fieldName, guessedName, null);
+				fieldList.add(widget);
+			}
 			FormSection section = new FormSection("Additional Information", null, fieldList);
 			sections.add(section);
 		}
+	}
+
+	private String guessName(String fieldName) {
+		char firstChar = fieldName.charAt(0);
+		firstChar = Character.toUpperCase(firstChar);
+		return firstChar + fieldName.substring(1);
 	}
 
 	@Override

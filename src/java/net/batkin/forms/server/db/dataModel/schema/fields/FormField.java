@@ -12,21 +12,15 @@ import com.mongodb.DBObject;
 public abstract class FormField<T> extends DbDataModel {
 
 	private String fieldName;
-	private String displayName;
-	private String helpText;
 
 	protected FormField(BSONObject obj) throws ServerDataException {
 		this.fieldName = getStringValue(obj, "name");
-		this.displayName = getStringValue(obj, "displayName");
-		this.helpText = getStringValue(obj, "helpText");
 	}
 
 	@Override
 	public DBObject toDbObject() {
 		BasicDBObject obj = new BasicDBObject();
 		putValue(obj, "name", fieldName);
-		putValue(obj, "displayName", displayName);
-		putValue(obj, "helpText", helpText);
 		putValue(obj, "defaultValue", getDefaultValue());
 		putValue(obj, "dataType", getDataTypeName());
 		addAdditionalData(obj);
@@ -42,14 +36,6 @@ public abstract class FormField<T> extends DbDataModel {
 		return fieldName;
 	}
 
-	public String getDisplayName() {
-		return displayName;
-	}
-
-	public String getHelpText() {
-		return helpText;
-	}
-	
 	public abstract String getDataTypeName();
 
 	public abstract T getDefaultValue();

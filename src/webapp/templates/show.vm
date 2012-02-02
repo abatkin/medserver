@@ -51,12 +51,12 @@
 
     <div class="container">
 
-      <h1>${layout.title}</h1>
+      <div class="page-header">
+        <h1>${layout.title}</h1>
 #if("$!{layout.title}" != "")
-      <p>
-      	${layout.description}
-      </p>
+        <p>${layout.description}</p>
 #end
+      </div>
       <form class="form-horizontal" action="${h.url("/form/${layout.formName}/submit")}" method="post">
 #foreach($group in $layout.sections)
 	#showSection($group)
@@ -77,26 +77,28 @@
 
 
 #macro(showSection $group)
-<div class="row">
+<div class="span8">
 <h3>${group.title}</h3>
 #if("$!{group.instructions}" != "")
 	<p>${group.instructions}</p>
 #end
 
-#foreach($fieldName in $group.fields)
-	#showField($fieldName)
+#foreach($widget in $group.widgets)
+	#showWidget($widget)
 #end
 
 </div>
 #end
 
-#macro(showField $fieldName)
-#set($field = $schema.getField($fieldName))
+#macro(showWidget $widget)
+#set($field = $schema.getField($widget.name))
       	<div class="control-group">
-      		<label class="control-label" for="${field.fieldName}">${field.displayName}</label>
+      		<label class="control-label" for="${field.fieldName}">${widget.title}</label>
       		<div class="controls">
       			<input class="input-xlarge" type="text" name="${field.fieldName}" id="${field.fieldName}" value="${field.defaultValue}"/>
-      			<p class="help-block">${field.helpText}</p>
+#if("$!{widget.helpText}" != "")
+      			<p class="help-block">${widget.helpText}</p>
+#end
       		</div>
       	</div>
 #end
