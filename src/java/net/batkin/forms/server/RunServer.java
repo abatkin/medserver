@@ -1,13 +1,14 @@
 package net.batkin.forms.server;
 
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStream;
 import java.util.Properties;
 
 import net.batkin.forms.server.configuration.Configuration;
+import net.batkin.forms.server.configuration.Configuration.ConfigurationSource;
 import net.batkin.forms.server.configuration.ConfigurationLoader;
 import net.batkin.forms.server.configuration.ConfigurationOption;
-import net.batkin.forms.server.configuration.Configuration.ConfigurationSource;
 import net.batkin.forms.server.db.dataModel.Config;
 import net.batkin.forms.server.db.utility.DBAccess;
 import net.batkin.forms.server.exception.ConfigurationException;
@@ -16,6 +17,9 @@ import net.batkin.forms.server.http.RestHandler;
 import net.batkin.forms.server.session.SessionManager;
 
 import org.eclipse.jetty.server.Server;
+import org.eclipse.jetty.server.handler.ContextHandler;
+import org.eclipse.jetty.server.handler.ContextHandlerCollection;
+import org.eclipse.jetty.server.handler.ResourceHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -73,7 +77,27 @@ public class RunServer {
 		server = new Server(port);
 		server.setGracefulShutdown(5000);
 		server.setStopAtShutdown(true);
-		server.setHandler(new RestHandler());
+		ContextHandlerCollection handler = new ContextHandlerCollection();
+
+		String staticDir = Configuration.getInstance().getValue(ConfigurationOption.CONFIG_STATIC_DIR, null);
+
+		if (staticDir == null) {
+			File inDevel = new File("./src/webapp");
+			if (inDevel.isDirectory()) {
+				staticDir = new File(inDevel, "static").getCanonicalPath();
+			} else {
+				staticDir = new File("./static").getCanonicalPath();
+			}
+		}
+		logger.info("Using directory [" + staticDir + "] for static files");
+
+		ContextHandler staticContext = handler.addContext("/static", staticDir);
+		staticContext.setHandler(new ResourceHandler());
+
+		ContextHandler formsContext = handler.addContext("/", "/");
+		formsContext.setHandler(new RestHandler());
+
+		server.setHandler(handler);
 		server.start();
 
 		logger.info("Starting Session Manager");

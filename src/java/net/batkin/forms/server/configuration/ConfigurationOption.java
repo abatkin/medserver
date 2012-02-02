@@ -9,4 +9,5 @@ public class ConfigurationOption {
 	public static final String CONFIG_DB_NAME = "dbName";
 	public static final String CONFIG_SESSION_SLEEP_TIME = "sessionSleepTime";
 	public static final String CONFIG_SESSION_VALIDITY_TIME = "sessionValidityTime";
+	public static final String CONFIG_STATIC_DIR = "staticFilesPath";
 }

@@ -28,7 +28,6 @@ public class RestHandler extends AbstractHandler {
 	public RestHandler() throws ConfigurationException {
 		controllerMap = new HashMap<String, Controller>();
 		renderer = new Renderer();
-
 		addController(new FormsController());
 	}
 
