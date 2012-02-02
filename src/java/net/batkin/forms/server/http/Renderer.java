@@ -1,0 +1,37 @@
+package net.batkin.forms.server.http;
+
+import java.io.Writer;
+import java.util.Properties;
+
+import org.apache.velocity.Template;
+import org.apache.velocity.VelocityContext;
+import org.apache.velocity.app.VelocityEngine;
+
+public class Renderer {
+
+	private VelocityEngine ve;
+	private VelocityContext rootContext;
+
+	public Renderer() {
+		Properties props = new Properties();
+		props.setProperty("input.encoding", "UTF-8");
+		props.setProperty("output.encoding", "UTF-8");
+		props.setProperty("runtime.log.logsystem.class", VelocitySlf4jLogChute.class.getName());
+		props.setProperty("resource.loader", "app");
+		props.setProperty("app.resource.loader.class", AppTemplateLoader.class.getName());
+		props.setProperty("app.resource.loader.cache", "false");
+		props.setProperty("app.resource.loader.modificationCheckInterval", "0");
+		
+		props.setProperty("eventhandler.referenceinsertion.class", Escaper.class.getName());
+
+		ve = new VelocityEngine(props);
+		rootContext = new VelocityContext();
+		rootContext.put("h", new Helpers());
+	}
+
+	public void renderTemplate(String templateName, TemplateParameters parameters, Writer writer) {
+		VelocityContext vc = new VelocityContext(parameters, rootContext);
+		Template template = ve.getTemplate(templateName);
+		template.merge(vc, writer);
+	}
+}

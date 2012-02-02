@@ -1,0 +1,13 @@
+<h1>${schema.schemaName}</h1>
+This is a test
+<ul>
+#foreach($field in $schema.fieldList)
+	#if($field.dataTypeName == "string")
+		<li><b>${field.displayName}</b>: <input type="text" name="${field.fieldName}" value="${field.defaultValue}"/> ${field.helpText}</li>
+	#elseif($field.dataTypeName == "integer")
+		<li><b>${field.displayName}</b>: <input type="text" name="${field.fieldName}" value="${field.defaultValue}"/> ${field.helpText}</li>
+	#elseif($field.dataTypeName == "float")
+		<li><b>${field.displayName}</b>: <input type="text" name="${field.fieldName}" value="${field.defaultValue}"/> ${field.helpText}</li>
+	#end
+#end
+</ul>
