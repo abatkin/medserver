@@ -2,6 +2,7 @@ package net.batkin.forms.server.controllers;
 
 import java.io.IOException;
 
+import net.batkin.forms.server.db.dataModel.form.FormLayout;
 import net.batkin.forms.server.db.dataModel.schema.FormSchema;
 import net.batkin.forms.server.exception.ControllerException;
 import net.batkin.forms.server.exception.FileNotFoundException;
@@ -28,13 +29,20 @@ public class FormsController extends Controller {
 			throw new FileNotFoundException();
 		}
 
-		FormSchema schema = FormSchema.loadByName(formName);
+		FormLayout layout = FormLayout.loadByName(formName);
+		if (layout == null) {
+			throw new FileNotFoundException();
+		}
+
+		String schemaName = layout.getSchemaName();
+		FormSchema schema = FormSchema.loadByName(schemaName);
 		if (schema == null) {
 			throw new FileNotFoundException();
 		}
 
 		if (action.equals("show")) {
 			TemplateParameters params = new TemplateParameters();
+			params.add("layout", layout);
 			params.add("schema", schema);
 			sendHtmlResponse(context, "/show", params);
 		} else {

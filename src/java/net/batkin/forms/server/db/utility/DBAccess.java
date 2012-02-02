@@ -24,8 +24,9 @@ public class DBAccess {
 		Schemas("schemas", new String[] {"schemaName"}),
 		LookupTables("lookuptables", new String[] {"tableName"}),
 		Changelogs("changelogs", new String[] {"userId", "timestamp", "patientId"}),
-		FormsData("formsdata", new String[] {"formName"}),
-		Sessions("sessions", new String[0]);
+		FormsData("formsdata", new String[] {"schemaName"}),
+		Sessions("sessions", new String[0]),
+		Layouts("layouts", new String[] {"formName"});
 
 		private String name;
 		private String[] indexes;

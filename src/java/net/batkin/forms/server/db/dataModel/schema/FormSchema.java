@@ -2,8 +2,10 @@ package net.batkin.forms.server.db.dataModel.schema;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import net.batkin.forms.server.db.dataModel.DbDataModel;
 import net.batkin.forms.server.db.dataModel.schema.fields.FormField;
@@ -79,8 +81,12 @@ public class FormSchema extends DbDataModel {
 		return fieldList;
 	}
 
-	public Map<String, FormField<?>> getFieldMap() {
-		return fieldMap;
+	public Set<String> getFieldNames() {
+		return new HashSet<String>(fieldMap.keySet());
+	}
+
+	public FormField<?> getField(String name) {
+		return fieldMap.get(name);
 	}
 
 	public static FormSchema loadByName(String formName) throws ServerDataException {

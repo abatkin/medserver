@@ -7,6 +7,7 @@ import java.util.Set;
 
 import net.batkin.forms.server.db.dataModel.DbDataModel;
 import net.batkin.forms.server.db.dataModel.schema.FormSchema;
+import net.batkin.forms.server.db.utility.DBAccess.DatabaseCollection;
 import net.batkin.forms.server.exception.NotImplementedException;
 import net.batkin.forms.server.exception.ServerDataException;
 
@@ -21,6 +22,7 @@ public class FormLayout extends DbDataModel {
 	private String formName;
 	private String schemaName;
 	private String title;
+	private String description;
 	private List<FormLink> links;
 	private List<FormSection> sections;
 
@@ -28,6 +30,7 @@ public class FormLayout extends DbDataModel {
 		id = getObjectIdValue(obj, "_id");
 		formName = getStringValue(obj, "formName");
 		schemaName = getStringValue(obj, "schemaName");
+		description = getStringValue(obj, "description", null);
 		title = getStringValue(obj, "title");
 
 		links = new ArrayList<FormLink>();
@@ -43,8 +46,8 @@ public class FormLayout extends DbDataModel {
 	}
 
 	public void validateFields(FormSchema schema) throws ServerDataException {
-		Set<String> fieldNames = new HashSet<String>(schema.getFieldMap().keySet());
-		Set<String> handledNames = new HashSet<String>(schema.getFieldMap().keySet());
+		Set<String> fieldNames = schema.getFieldNames();
+		Set<String> handledNames = new HashSet<String>();
 		for (FormSection section : sections) {
 			for (String fieldName : section.getFields()) {
 				if (fieldNames.contains(fieldName)) {
@@ -88,6 +91,10 @@ public class FormLayout extends DbDataModel {
 		return title;
 	}
 
+	public String getDescription() {
+		return description;
+	}
+
 	public List<FormLink> getLinks() {
 		return links;
 	}
@@ -96,4 +103,12 @@ public class FormLayout extends DbDataModel {
 		return sections;
 	}
 
+	public static FormLayout loadByName(String formName) throws ServerDataException {
+		DBObject formData = DatabaseCollection.Layouts.findByString("formName", formName);
+		if (formData == null) {
+			return null;
+		}
+
+		return new FormLayout(formData);
+	}
 }
