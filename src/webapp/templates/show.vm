@@ -37,20 +37,24 @@
             <span class="i-bar"></span>
           </a>
           <a class="brand" href="#">${layout.title}</a>
+#if(!$layout.links.isEmpty())
           <div class="nav-collapse">
             <ul class="nav">
-              <li class="active"><a href="#">Home</a></li>
-
-              <li><a href="#about">About</a></li>
-              <li><a href="#contact">Contact</a></li>
+              <li class="active"><a href="#top" id="link-main">Home</a></li>
+#showTabs()
             </ul>
           </div><!--/.nav-collapse -->
+#end
         </div>
       </div>
     </div>
 
-    <div class="container">
+#if(!$layout.links.isEmpty())
+#showTabContent()
+#end
 
+    <div class="container" id="data-main">
+      <a name="#top"></a>
       <div class="page-header">
         <h1>${layout.title}</h1>
 #if("$!{layout.title}" != "")
@@ -72,9 +76,63 @@
     <script type="text/javascript" src="http://platform.twitter.com/widgets.js"></script>
     ${h.js('jquery-1.7.1.min.js')}
     ${h.js('bootstrap.min.js')}
+#if(!$layout.links.isEmpty())
+#buildTabScript()
+#end
   </body>
 </html>
 
+#macro(showTabs)
+	#foreach($link in $layout.links)
+		#if($link.linkType == "ExternalLink")
+			<li><a href="${link.destinationUrl}" target="_blank">${link.displayText}</a></li>
+		#else
+			<li><a href="#${link.name}" id="link-${link.name}">${link.displayText}</a></li>
+		#end
+	#end
+#end
+
+#macro(showTabContent)
+	#foreach($link in $layout.links)
+		#if($link.linkType == "DataLink")
+			<div class="container" id="data-${link.name}">
+				<h1>${link.displayText}</h1>
+				${h.raw($link.displayData)}
+			</div>
+		#end
+	#end
+#end
+
+#macro(buildTabScript)
+<script type="text/javascript">
+	$(document).ready(function() {
+		$("div.navbar ul.nav li a").each(function() {
+		var id = $(this).attr("id");
+		if (id == null) {
+			return;
+		}
+		var result = id.match(/^link-(.+)$/);
+		if (result == null) {
+			return;
+		}
+		var linkName = result[1];
+		if (linkName != 'main') {
+			$("#data-" + linkName).hide();
+		}
+
+		$(this).click(function() {
+			// Set link styling
+			$("div.navbar ul.nav li").removeClass("active");
+			$("div.navbar ul.nav li").has("a#link-" + linkName).addClass("active");
+
+			// Make content appear/disappear
+			$('div[id^="data-"]').hide();
+			$("#data-" + linkName).show();
+		});
+	  });
+	});
+</script>
+#end
 
 #macro(showSection $group)
 <div class="span8">
