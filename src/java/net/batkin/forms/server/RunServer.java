@@ -31,7 +31,7 @@ public class RunServer {
 		try {
 			loadInitialConfigurations(args);
 			DBAccess.connect();
-			DBAccess.createDatabase();
+			DBAccess.initDatabase();
 
 			Configuration config = Configuration.getInstance();
 			if (config.containsKey(ConfigurationOption.CONFIG_SERVER_NAME)) {

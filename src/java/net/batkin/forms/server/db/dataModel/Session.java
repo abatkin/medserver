@@ -2,7 +2,7 @@ package net.batkin.forms.server.db.dataModel;
 
 import java.util.Date;
 
-import net.batkin.forms.server.db.utility.DBAccess.DatabaseCollection;
+import net.batkin.forms.server.db.utility.DatabaseCollection;
 import net.batkin.forms.server.exception.ServerDataException;
 
 import org.bson.BSONObject;

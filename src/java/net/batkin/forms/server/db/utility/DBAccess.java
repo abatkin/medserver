@@ -2,85 +2,14 @@ package net.batkin.forms.server.db.utility;
 
 import net.batkin.forms.server.configuration.Configuration;
 import net.batkin.forms.server.configuration.ConfigurationOption;
-import net.batkin.forms.server.db.dataModel.DbDataModel;
 
-import org.bson.types.ObjectId;
-
-import com.mongodb.BasicDBObject;
 import com.mongodb.DB;
 import com.mongodb.DBCollection;
-import com.mongodb.DBCursor;
-import com.mongodb.DBObject;
 import com.mongodb.Mongo;
-import com.mongodb.WriteResult;
 
 public class DBAccess {
 
 	private static DB db;
-
-	public enum DatabaseCollection {
-		Users("users", new String[] {"username"}),
-		Configs("configs", new String[] {"configName"}),
-		Schemas("schemas", new String[] {"schemaName"}),
-		LookupTables("lookuptables", new String[] {"tableName"}),
-		Changelogs("changelogs", new String[] {"userId", "timestamp", "patientId"}),
-		FormsData("formsdata", new String[] {"schemaName"}),
-		Sessions("sessions", new String[0]),
-		Layouts("layouts", new String[] {"formName"});
-
-		private String name;
-		private String[] indexes;
-
-		DatabaseCollection(String name, String[] indexes) {
-			this.name = name;
-			this.indexes = indexes;
-		}
-
-		public DBObject findById(ObjectId id) {
-			return findByCriteria(new BasicDBObject("_id", id));
-		}
-
-		public DBObject findByString(String key, String value) {
-			return findByCriteria(new BasicDBObject(key, value));
-		}
-
-		public DBObject findByCriteria(BasicDBObject criteria) {
-			return getCollection(this).findOne(criteria);
-		}
-
-		public void deleteObject(DbDataModel obj) {
-			getCollection(this).remove(new BasicDBObject("_id", obj.getObjectId()));
-		}
-
-		public void saveObject(DbDataModel obj) {
-			getCollection(this).save(obj.toDbObject());
-		}
-
-		public void saveDbObject(DBObject obj) {
-			getCollection(this).save(obj);
-		}
-
-		public WriteResult removeByQuery(BasicDBObject query) {
-			return getCollection(this).remove(query);
-		}
-
-		public DBCursor findWithFields(BasicDBObject query, String... fields) {
-			BasicDBObject fieldList = new BasicDBObject();
-			for (String field : fields) {
-				fieldList.put(field, Integer.valueOf(1));
-			}
-			return getCollection(this).find(query, fieldList);
-		}
-	}
-
-	public static void createDatabase() {
-		for (DatabaseCollection collection : DatabaseCollection.values()) {
-			DBCollection mongoCollection = db.getCollection(collection.name);
-			for (String indexName : collection.indexes) {
-				mongoCollection.ensureIndex(indexName);
-			}
-		}
-	}
 
 	public static void connect() throws Exception {
 		if (db != null) {
@@ -99,7 +28,11 @@ public class DBAccess {
 		db = mongo.getDB(dbName);
 	}
 
-	private static DBCollection getCollection(DatabaseCollection collection) {
-		return db.getCollection(collection.name);
+	public static DBCollection getCollection(String collectionName) {
+		return db.getCollection(collectionName);
+	}
+
+	public static void initDatabase() {
+		DatabaseCollection.initCollectiond(db);
 	}
 }

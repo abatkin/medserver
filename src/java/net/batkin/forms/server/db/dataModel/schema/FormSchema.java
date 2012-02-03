@@ -9,7 +9,7 @@ import java.util.Set;
 
 import net.batkin.forms.server.db.dataModel.DbDataModel;
 import net.batkin.forms.server.db.dataModel.schema.fields.FormField;
-import net.batkin.forms.server.db.utility.DBAccess.DatabaseCollection;
+import net.batkin.forms.server.db.utility.DatabaseCollection;
 import net.batkin.forms.server.exception.ServerDataException;
 
 import org.bson.BSONObject;
@@ -23,6 +23,7 @@ public class FormSchema extends DbDataModel {
 
 	private ObjectId id;
 	private String schemaName;
+	private String resultCollection;
 	private boolean isActive;
 	private List<FormField<?>> fieldList;
 	private Map<String, FormField<?>> fieldMap;
@@ -30,6 +31,7 @@ public class FormSchema extends DbDataModel {
 	public FormSchema(BSONObject obj) throws ServerDataException {
 		this.id = getObjectIdValue(obj, "_id");
 		this.schemaName = getStringValue(obj, "schemaName");
+		this.resultCollection = getStringValue(obj, "resultCollection");
 		this.isActive = getBooleanValue(obj, "active", Boolean.TRUE).booleanValue();
 		this.fieldList = new ArrayList<FormField<?>>();
 		this.fieldMap = new HashMap<String, FormField<?>>();
@@ -54,6 +56,7 @@ public class FormSchema extends DbDataModel {
 		BasicDBObject obj = new BasicDBObject();
 		putValue(obj, "_id", id);
 		putValue(obj, "schemaName", schemaName);
+		putValue(obj, "resultCollection", resultCollection);
 		putValue(obj, "active", Boolean.valueOf(isActive));
 
 		BasicBSONList bsonFieldList = new BasicBSONList();
@@ -71,6 +74,10 @@ public class FormSchema extends DbDataModel {
 
 	public String getSchemaName() {
 		return schemaName;
+	}
+
+	public String getResultCollection() {
+		return resultCollection;
 	}
 
 	public boolean isActive() {

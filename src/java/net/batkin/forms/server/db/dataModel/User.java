@@ -8,8 +8,8 @@ import java.util.Map;
 import java.util.Set;
 
 import net.batkin.forms.server.db.utility.BsonListCreator;
+import net.batkin.forms.server.db.utility.DatabaseCollection;
 import net.batkin.forms.server.db.utility.MapValueParser;
-import net.batkin.forms.server.db.utility.DBAccess.DatabaseCollection;
 import net.batkin.forms.server.exception.ServerDataException;
 
 import org.bson.BSONObject;

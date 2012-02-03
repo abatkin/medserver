@@ -8,9 +8,9 @@ import java.util.Map;
 import java.util.Set;
 
 import net.batkin.forms.server.db.dataModel.Session;
-import net.batkin.forms.server.db.dataModel.User;
 import net.batkin.forms.server.db.dataModel.Session.SessionCreator;
-import net.batkin.forms.server.db.utility.DBAccess.DatabaseCollection;
+import net.batkin.forms.server.db.dataModel.User;
+import net.batkin.forms.server.db.utility.DatabaseCollection;
 import net.batkin.forms.server.exception.ServerDataException;
 
 import org.bson.types.ObjectId;

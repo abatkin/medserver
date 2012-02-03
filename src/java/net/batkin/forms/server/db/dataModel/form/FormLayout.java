@@ -7,7 +7,7 @@ import java.util.Set;
 
 import net.batkin.forms.server.db.dataModel.DbDataModel;
 import net.batkin.forms.server.db.dataModel.schema.FormSchema;
-import net.batkin.forms.server.db.utility.DBAccess.DatabaseCollection;
+import net.batkin.forms.server.db.utility.DatabaseCollection;
 import net.batkin.forms.server.exception.NotImplementedException;
 import net.batkin.forms.server.exception.ServerDataException;
 
