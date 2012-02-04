@@ -10,6 +10,7 @@ import java.util.Set;
 import net.batkin.forms.server.db.dataModel.DbDataModel;
 import net.batkin.forms.server.db.dataModel.schema.fields.FormField;
 import net.batkin.forms.server.db.utility.DatabaseCollection;
+import net.batkin.forms.server.exception.ControllerException;
 import net.batkin.forms.server.exception.ServerDataException;
 
 import org.bson.BSONObject;
@@ -28,7 +29,7 @@ public class FormSchema extends DbDataModel {
 	private List<FormField<?>> fieldList;
 	private Map<String, FormField<?>> fieldMap;
 
-	public FormSchema(BSONObject obj) throws ServerDataException {
+	public FormSchema(BSONObject obj) throws ControllerException {
 		this.id = getObjectIdValue(obj, "_id");
 		this.schemaName = getStringValue(obj, "schemaName");
 		this.resultCollection = getStringValue(obj, "resultCollection");
@@ -96,7 +97,7 @@ public class FormSchema extends DbDataModel {
 		return fieldMap.get(name);
 	}
 
-	public static FormSchema loadByName(String formName) throws ServerDataException {
+	public static FormSchema loadByName(String formName) throws ControllerException {
 		DBObject schemaData = DatabaseCollection.Schemas.findByString("schemaName", formName);
 		if (schemaData == null) {
 			return null;

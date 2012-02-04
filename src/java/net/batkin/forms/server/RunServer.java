@@ -10,6 +10,7 @@ import net.batkin.forms.server.configuration.Configuration.ConfigurationSource;
 import net.batkin.forms.server.configuration.ConfigurationLoader;
 import net.batkin.forms.server.configuration.ConfigurationOption;
 import net.batkin.forms.server.db.dataModel.Config;
+import net.batkin.forms.server.db.dataModel.schema.fields.FieldManager;
 import net.batkin.forms.server.db.utility.DBAccess;
 import net.batkin.forms.server.exception.ConfigurationException;
 import net.batkin.forms.server.exception.ServerDataException;
@@ -71,7 +72,8 @@ public class RunServer {
 	private static void createServer() throws Exception {
 		Logger logger = LoggerFactory.getLogger(RunServer.class);
 
-		int port = Configuration.getInstance().getIntegerValue(ConfigurationOption.CONFIG_HTTP_SERVER_PORT, 8080);
+		Configuration config = Configuration.getInstance();
+		int port = config.getIntegerValue(ConfigurationOption.CONFIG_HTTP_SERVER_PORT, 8080);
 		logger.info("Starting web server on port " + port);
 
 		server = new Server(port);
@@ -79,7 +81,7 @@ public class RunServer {
 		server.setStopAtShutdown(true);
 		ContextHandlerCollection handler = new ContextHandlerCollection();
 
-		String staticDir = Configuration.getInstance().getValue(ConfigurationOption.CONFIG_STATIC_DIR, null);
+		String staticDir = config.getValue(ConfigurationOption.CONFIG_STATIC_DIR, null);
 
 		if (staticDir == null) {
 			File inDevel = new File("./src/webapp");
@@ -96,6 +98,8 @@ public class RunServer {
 
 		ContextHandler formsContext = handler.addContext("/", "/");
 		formsContext.setHandler(new RestHandler(""));
+
+		FieldManager.configure(config);
 
 		server.setHandler(handler);
 		server.start();

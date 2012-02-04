@@ -1,6 +1,7 @@
 package net.batkin.forms.server.db.dataModel.schema.fields;
 
 import net.batkin.forms.server.db.dataModel.DbDataModel;
+import net.batkin.forms.server.exception.ControllerException;
 import net.batkin.forms.server.exception.ServerDataException;
 
 import org.bson.BSONObject;
@@ -42,16 +43,8 @@ public abstract class FormField<T> extends DbDataModel {
 
 	public abstract void addAdditionalData(BSONObject obj);
 
-	public static FormField<?> parseField(BSONObject fieldObj) throws ServerDataException {
+	public static FormField<?> parseField(BSONObject fieldObj) throws ControllerException {
 		String dataType = getStringValue(fieldObj, "dataType");
-		if (dataType.equals("string")) {
-			return new StringField(fieldObj);
-		} else if (dataType.equals("integer")) {
-			return new IntegerField(fieldObj);
-		} else if (dataType.equals("float")) {
-			return new FloatField(fieldObj);
-		} else {
-			throw new ServerDataException("Unknown field type " + dataType);
-		}
+		return FieldManager.getInstance().getField(dataType, fieldObj);
 	}
 }
