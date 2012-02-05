@@ -27,6 +27,7 @@ public class FormLayout extends DbDataModel {
 	private String description;
 	private List<FormLink> links;
 	private List<FormSection> sections;
+	private List<FormWidget<?>> allWidgets;
 
 	public FormLayout(BSONObject obj) throws ControllerException {
 		id = getObjectIdValue(obj, "_id");
@@ -40,10 +41,13 @@ public class FormLayout extends DbDataModel {
 			links.add(new FormLink(linkObj));
 		}
 
+		allWidgets = new ArrayList<FormWidget<?>>();
 		sections = new ArrayList<FormSection>();
 		for (BSONObject sectionObj : getArrayValue(obj, "sections", BSONObject.class)) {
 			FormSection section = new FormSection(sectionObj);
 			sections.add(section);
+
+			allWidgets.addAll(section.getWidgets());
 		}
 	}
 
@@ -51,7 +55,7 @@ public class FormLayout extends DbDataModel {
 		Set<String> fieldNames = schema.getFieldNames();
 		Set<String> handledNames = new HashSet<String>();
 		for (FormSection section : sections) {
-			for (FormWidget<?, ?> widget : section.getWidgets()) {
+			for (FormWidget<?> widget : section.getWidgets()) {
 				String fieldName = widget.getName();
 				if (fieldNames.contains(fieldName)) {
 					fieldNames.remove(fieldName);
@@ -97,6 +101,10 @@ public class FormLayout extends DbDataModel {
 
 	public List<FormSection> getSections() {
 		return sections;
+	}
+
+	public List<FormWidget<?>> getAllWidgets() {
+		return allWidgets;
 	}
 
 	public static FormLayout loadByName(String formName) throws ControllerException {

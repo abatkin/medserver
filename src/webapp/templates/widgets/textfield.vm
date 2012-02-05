@@ -1,1 +1,1 @@
-<input class="input-xlarge" type="text" name="${field.fieldName}" id="${field.fieldName}" value="${field.defaultValue}"/>
+<input class="input-xlarge" type="text" name="${field.fieldName}" id="${field.fieldName}" value="$!{data.object}"/>

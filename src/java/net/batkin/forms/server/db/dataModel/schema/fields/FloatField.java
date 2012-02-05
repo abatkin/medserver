@@ -4,13 +4,15 @@ import net.batkin.forms.server.exception.ServerDataException;
 
 import org.bson.BSONObject;
 
-public class FloatField extends FormField<Float, Float> {
+public class FloatField extends FormField<Float> {
 
+	private Float defaultValue;
 	private Float min;
 	private Float max;
 
 	public FloatField(BSONObject obj) throws ServerDataException {
 		super(obj, Float.class);
+		this.defaultValue = getFloatValue(obj, "min", null);
 		this.min = getFloatValue(obj, "min", null);
 		this.max = getFloatValue(obj, "max", null);
 	}
@@ -22,7 +24,7 @@ public class FloatField extends FormField<Float, Float> {
 
 	@Override
 	public Float getDefaultValue() {
-		return Float.valueOf(0.0f);
+		return defaultValue;
 	}
 
 	@Override
@@ -37,8 +39,8 @@ public class FloatField extends FormField<Float, Float> {
 	}
 
 	@Override
-	public Float fromNativeObject(Float obj) {
-		return obj;
+	public Float fromNativeObject(Object obj) {
+		return (Float) obj;
 	}
 
 }

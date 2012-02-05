@@ -5,28 +5,32 @@ import java.util.Map;
 import org.bson.BSONObject;
 
 import net.batkin.forms.server.db.dataModel.form.FieldData;
+import net.batkin.forms.server.db.dataModel.schema.fields.FieldValidationException;
 import net.batkin.forms.server.db.dataModel.schema.fields.FormField;
 import net.batkin.forms.server.exception.ServerDataException;
 
-public class IntegerTextWidget extends FormWidget<Integer, Integer> {
+public class IntegerTextWidget extends FormWidget<Integer> {
 
 	public IntegerTextWidget(BSONObject obj) throws ServerDataException {
 		super(obj);
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
-	public FieldData<Integer, Integer> buildFieldData(FormField<Integer, Integer> field) {
-		return new FieldData<Integer, Integer>(field) {
+	public FieldData<Integer> buildFieldData(FormField<?> field) {
+		return new FieldData<Integer>((FormField<Integer>) field) {
 			@Override
-			public void populateObject(Map<String, String> params) {
-				String stringData = params.get(getName());
-				if (stringData == null) {
-					return;
+			public Integer convertObject(Map<String, String[]> params) throws FieldValidationException {
+				String[] values = params.get(getName());
+				if (values == null || values.length == 0) {
+					return null;
 				}
+
+				String stringData = values[0];
 				try {
-					nativeData = Integer.valueOf(stringData);
+					return Integer.valueOf(stringData);
 				} catch (Exception e) {
-					setError("invalid integer");
+					throw new FieldValidationException("invalid integer");
 				}
 			}
 

@@ -1,5 +1,8 @@
 package net.batkin.forms.server.http.velocity;
 
+import java.io.PrintWriter;
+import java.io.StringWriter;
+
 public class Helpers {
 
 	private String urlBase;
@@ -47,4 +50,10 @@ public class Helpers {
 		return new RawHtml("<link href=\"" + url + "\" rel=\"stylesheet\"/>");
 	}
 
+	public String stringifyException(Throwable t) {
+		StringWriter sw = new StringWriter();
+		PrintWriter pw = new PrintWriter(sw);
+		t.printStackTrace(pw);
+		return sw.toString();
+	}
 }

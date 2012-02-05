@@ -12,7 +12,7 @@ import org.bson.types.ObjectId;
 
 import com.mongodb.DBObject;
 
-public abstract class FormWidget<DbType, NativeType> extends DbDataModel {
+public abstract class FormWidget<DbType> extends DbDataModel {
 
 	private String name; // Link to FormField
 	private String title;
@@ -54,12 +54,12 @@ public abstract class FormWidget<DbType, NativeType> extends DbDataModel {
 
 	public abstract String getTemplateName();
 
-	public abstract FieldData<DbType, NativeType> buildFieldData(FormField<DbType, NativeType> field);
+	public abstract FieldData<DbType> buildFieldData(FormField<?> field);
 
 	@SuppressWarnings("unchecked")
-	public static <DbType, NativeType> FormWidget<DbType, NativeType> parseWidget(BSONObject widgetObj) throws ControllerException {
+	public static <DbType, NativeType> FormWidget<DbType> parseWidget(BSONObject widgetObj) throws ControllerException {
 		String widgetType = getStringValue(widgetObj, "widgetType");
-		return (FormWidget<DbType, NativeType>) WidgetManager.getInstance().getWidget(widgetType, widgetObj);
+		return (FormWidget<DbType>) WidgetManager.getInstance().getWidget(widgetType, widgetObj);
 	}
 
 }

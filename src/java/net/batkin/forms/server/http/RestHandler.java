@@ -64,10 +64,10 @@ public class RestHandler extends AbstractHandler {
 			} else {
 				LoggerFactory.getLogger(RestHandler.class).warn("Error processing " + target + ": " + e.getMessage());
 			}
-			Controller.sendError(context, e.getHttpCode(), e.getApplicationCode(), e.getMessage());
+			Controller.sendError(context, e.getHttpCode(), e.getApplicationCode(), e.getMessage(), e);
 		} catch (Exception e) {
 			LoggerFactory.getLogger(RestHandler.class).warn("Error processing " + target + ": " + e.getMessage(), e);
-			Controller.sendError(context, HttpServletResponse.SC_INTERNAL_SERVER_ERROR, ErrorCodes.ERROR_CODE_UNKNOWN, "Internal Error: " + e.getMessage());
+			Controller.sendError(context, HttpServletResponse.SC_INTERNAL_SERVER_ERROR, ErrorCodes.ERROR_CODE_UNKNOWN, "Internal Error: " + e.getMessage(), e);
 		}
 	}
 

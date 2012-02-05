@@ -10,7 +10,7 @@ import org.bson.types.ObjectId;
 import com.mongodb.BasicDBObject;
 import com.mongodb.DBObject;
 
-public abstract class FormField<DbClass, NativeClass> extends DbDataModel {
+public abstract class FormField<DbClass> extends DbDataModel {
 
 	private Class<DbClass> dbClass;
 	private String fieldName;
@@ -43,28 +43,28 @@ public abstract class FormField<DbClass, NativeClass> extends DbDataModel {
 		return dbClass;
 	}
 
-	public NativeClass convertFromDb(DbClass obj) {
+	public Object convertFromDb(DbClass obj) {
 		if (dbClass.isInstance(obj)) {
 			return toNativeObject(obj);
 		}
 		throw new ClassCastException("Field " + getFieldName() + " must be of type " + dbClass.getName() + ", found " + obj.getClass().getName());
 	}
 
-	public Object convertToDb(NativeClass obj) {
+	public DbClass convertToDb(Object obj) {
 		return fromNativeObject(obj);
 	}
 
 	public abstract String getDataTypeName();
 
-	public abstract NativeClass getDefaultValue();
+	public abstract Object getDefaultValue();
 
 	public abstract void addAdditionalData(BSONObject obj);
 
-	public abstract NativeClass toNativeObject(DbClass obj);
+	public abstract Object toNativeObject(DbClass obj);
 
-	public abstract DbClass fromNativeObject(NativeClass obj);
+	public abstract DbClass fromNativeObject(Object obj);
 
-	public static FormField<?, ?> parseField(BSONObject fieldObj) throws ControllerException {
+	public static FormField<?> parseField(BSONObject fieldObj) throws ControllerException {
 		String dataType = getStringValue(fieldObj, "dataType");
 		return FieldManager.getInstance().getField(dataType, fieldObj);
 	}

@@ -21,6 +21,7 @@ public class DatabaseCollection {
 	public static DatabaseCollection FormsData;
 	public static DatabaseCollection Sessions;
 	public static DatabaseCollection Layouts;
+	public static DatabaseCollection Results;
 
 	private String name;
 
@@ -77,6 +78,7 @@ public class DatabaseCollection {
 		FormsData = buildCollection(db, "formsdata", new String[] { "schemaName" });
 		Sessions = buildCollection(db, "sessions", null);
 		Layouts = buildCollection(db, "layouts", new String[] { "formName" });
+		Results = buildCollection(db, "results", new String[] { "formName" });
 	}
 
 	public static DatabaseCollection buildCollection(DB database, String collectionName, String[] indexes) {

@@ -61,19 +61,8 @@
         <p>${layout.description}</p>
 #end
       </div>
-      <form class="form-horizontal" action="${h.url("/form/${layout.formName}/submit")}" method="post">
-#if(${result.hasErrors()})
-<p>There were errors with your submission. Please correct them and resubmit the form.</p>
-#end
 
-#foreach($group in $layout.sections)
-	#showSection($group)
-#end
-
-          <div class="form-actions">
-            <button type="submit" class="btn btn-primary">Submit</button>
-          </div>
-      </form>
+<h1>${message}</h1>
 
     </div> <!-- /container -->
 
@@ -143,7 +132,7 @@
 #end
 
 #macro(showSection $group)
-<div>
+<div class="span8">
 <h3>${group.title}</h3>
 #if("$!{group.instructions}" != "")
 	<p>${group.instructions}</p>

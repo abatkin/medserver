@@ -30,14 +30,14 @@ public class WidgetManager {
 		for (String widgetType : config.getValues("widget.types")) {
 			String className = config.getValue("widget.type." + widgetType);
 			@SuppressWarnings("unchecked")
-			Class<FormWidget<?, ?>> widgetClass = (Class<FormWidget<?, ?>>) Class.forName(className);
-			Constructor<FormWidget<?, ?>> constructor = widgetClass.getConstructor(BSONObject.class);
+			Class<FormWidget<?>> widgetClass = (Class<FormWidget<?>>) Class.forName(className);
+			Constructor<FormWidget<?>> constructor = widgetClass.getConstructor(BSONObject.class);
 			WidgetCreator creator = new WidgetCreator(widgetType, constructor);
 			widgetMap.put(widgetType, creator);
 		}
 	}
 
-	public FormWidget<?, ?> getWidget(String widgetType, BSONObject bson) throws ControllerException {
+	public FormWidget<?> getWidget(String widgetType, BSONObject bson) throws ControllerException {
 		WidgetCreator creator = widgetMap.get(widgetType);
 		if (creator == null) {
 			throw new ServerDataException("Unknown widget type " + widgetType);
@@ -48,14 +48,14 @@ public class WidgetManager {
 	private class WidgetCreator {
 
 		private String widgetType;
-		private Constructor<FormWidget<?, ?>> constructor;
+		private Constructor<FormWidget<?>> constructor;
 
-		public WidgetCreator(String widgetType, Constructor<FormWidget<?, ?>> constructor) {
+		public WidgetCreator(String widgetType, Constructor<FormWidget<?>> constructor) {
 			this.widgetType = widgetType;
 			this.constructor = constructor;
 		}
 
-		public FormWidget<?, ?> newInstance(BSONObject obj) throws ControllerException {
+		public FormWidget<?> newInstance(BSONObject obj) throws ControllerException {
 			try {
 				return constructor.newInstance(obj);
 			} catch (InvocationTargetException e) {

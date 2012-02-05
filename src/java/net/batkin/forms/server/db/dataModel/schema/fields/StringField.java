@@ -4,7 +4,7 @@ import net.batkin.forms.server.exception.ServerDataException;
 
 import org.bson.BSONObject;
 
-public class StringField extends FormField<String, String> {
+public class StringField extends FormField<String> {
 
 	public enum SubType {
 		plain, multiline, url, email
@@ -78,7 +78,7 @@ public class StringField extends FormField<String, String> {
 	}
 
 	@Override
-	public String fromNativeObject(String obj) {
-		return obj;
+	public String fromNativeObject(Object obj) {
+		return (String) obj;
 	}
 }

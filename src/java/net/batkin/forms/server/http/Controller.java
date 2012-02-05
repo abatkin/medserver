@@ -51,7 +51,7 @@ public abstract class Controller {
 		renderResponse(context, template, params);
 	}
 
-	public static void sendError(RequestContext context, int httpCode, int applicationCode, String message) throws IOException {
+	public static void sendError(RequestContext context, int httpCode, int applicationCode, String message, Throwable t) throws IOException {
 		HttpServletResponse response = context.getResponse();
 		response.setContentType("text/html");
 		response.setStatus(httpCode);
@@ -59,6 +59,7 @@ public abstract class Controller {
 			.add("httpCode", Integer.valueOf(httpCode))
 			.add("applicationCode", Integer.valueOf(applicationCode))
 			.add("message", message)
+			.add("ex", t)
 		;
 		switch (httpCode) {
 		case 404:
