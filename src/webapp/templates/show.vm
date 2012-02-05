@@ -153,7 +153,7 @@
       	<div class="control-group">
       		<label class="control-label" for="${field.fieldName}">${widget.title}</label>
       		<div class="controls">
-      			<input class="input-xlarge" type="text" name="${field.fieldName}" id="${field.fieldName}" value="${field.defaultValue}"/>
+      			#parse("/widgets/${widget.templateName}")
 #if("$!{widget.helpText}" != "")
       			<p class="help-block">${widget.helpText}</p>
 #end
