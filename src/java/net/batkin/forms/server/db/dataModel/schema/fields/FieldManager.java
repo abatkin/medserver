@@ -30,14 +30,14 @@ public class FieldManager {
 		for (String fieldType : config.getValues("field.types")) {
 			String className = config.getValue("field.type." + fieldType);
 			@SuppressWarnings("unchecked")
-			Class<FormField<?>> fieldClass = (Class<FormField<?>>) Class.forName(className);
-			Constructor<FormField<?>> constructor = fieldClass.getConstructor(BSONObject.class);
+			Class<FormField<?, ?>> fieldClass = (Class<FormField<?, ?>>) Class.forName(className);
+			Constructor<FormField<?, ?>> constructor = fieldClass.getConstructor(BSONObject.class);
 			FieldCreator creator = new FieldCreator(fieldType, constructor);
 			fieldMap.put(fieldType, creator);
 		}
 	}
 
-	public FormField<?> getField(String fieldType, BSONObject bson) throws ControllerException {
+	public FormField<?, ?> getField(String fieldType, BSONObject bson) throws ControllerException {
 		FieldCreator creator = fieldMap.get(fieldType);
 		if (creator == null) {
 			throw new ServerDataException("Unknown field type " + fieldType);
@@ -48,14 +48,14 @@ public class FieldManager {
 	private class FieldCreator {
 
 		private String fieldType;
-		private Constructor<FormField<?>> constructor;
+		private Constructor<FormField<?, ?>> constructor;
 
-		public FieldCreator(String fieldType, Constructor<FormField<?>> constructor) {
+		public FieldCreator(String fieldType, Constructor<FormField<?, ?>> constructor) {
 			this.fieldType = fieldType;
 			this.constructor = constructor;
 		}
 
-		public FormField<?> newInstance(BSONObject obj) throws ControllerException {
+		public FormField<?, ?> newInstance(BSONObject obj) throws ControllerException {
 			try {
 				return constructor.newInstance(obj);
 			} catch (InvocationTargetException e) {

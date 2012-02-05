@@ -41,16 +41,20 @@ public class Config extends DbDataModel implements Map<String, List<String>> {
 
 	public static Config createAndSaveNewConfig(String name, Map<String, List<String>> values) {
 		Config config = new Config(new ObjectId(), name, values);
-		DatabaseCollection.Configs.saveObject(config);
+		config.save();
 		return config;
+	}
+
+	public void save() {
+		DatabaseCollection.Configs.saveObject(this);
 	}
 
 	public DBObject toDbObject() {
 		DBObject obj = new BasicDBObject();
 
-		obj.put("_id", id);
-		obj.put("configName", name);
-		obj.put("values", valuesToBson());
+		putValue(obj, "_id", id);
+		putValue(obj, "configName", name);
+		putValue(obj, "values", valuesToBson());
 
 		return obj;
 	}

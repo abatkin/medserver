@@ -91,12 +91,16 @@ public class Configuration {
 		return values.keySet();
 	}
 
+	public void addValues(ConfigurationSource source, String key, List<String> newValues) {
+		if (values.containsKey(key) && !values.get(key).source.equals(source)) {
+			return;
+		}
+		values.put(key, new ConfigurationValue(key, newValues, source));
+	}
+
 	public void addValues(ConfigurationSource source, Map<String, List<String>> newValues) {
 		for (Entry<String, List<String>> entry : newValues.entrySet()) {
-			if (values.containsKey(entry.getKey())) {
-				continue;
-			}
-			values.put(entry.getKey(), new ConfigurationValue(entry.getKey(), entry.getValue(), source));
+			addValues(source, entry.getKey(), entry.getValue());
 		}
 	}
 
@@ -112,11 +116,20 @@ public class Configuration {
 			return name;
 		}
 
+		@Override
+		public boolean equals(Object obj) {
+			if (obj != null && obj instanceof ConfigurationSource) {
+				return ((ConfigurationSource) obj).name.equals(name);
+			}
+			return false;
+		}
+
 		public static final ConfigurationSource CommandLine = new ConfigurationSource("CommandLine");
 		public static final ConfigurationSource ConfigFile = new ConfigurationSource("ConfigFile");
+		public static final ConfigurationSource Computed = new ConfigurationSource("Computed");
 
 		public static ConfigurationSource createDatabaseSource(String name) {
-			return new ConfigurationSource("Database[" + name + "]");
+			return new ConfigurationSource("Database<" + name + ">");
 		}
 	}
 

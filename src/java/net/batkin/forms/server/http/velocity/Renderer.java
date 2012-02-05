@@ -1,8 +1,11 @@
 package net.batkin.forms.server.http.velocity;
 
+import java.io.IOException;
 import java.io.Writer;
 import java.util.Properties;
 
+import net.batkin.forms.server.configuration.ConfigurationOption;
+import net.batkin.forms.server.util.ConfigBuilder;
 
 import org.apache.velocity.Template;
 import org.apache.velocity.VelocityContext;
@@ -13,16 +16,19 @@ public class Renderer {
 	private VelocityEngine ve;
 	private VelocityContext rootContext;
 
-	public Renderer(String urlBase) {
+	public Renderer(String urlBase) throws IOException {
+		String templatePath = ConfigBuilder.getResourceDirectory("templates", ConfigurationOption.CONFIG_TEMPLATE_DIR);
+
 		Properties props = new Properties();
 		props.setProperty("input.encoding", "UTF-8");
 		props.setProperty("output.encoding", "UTF-8");
 		props.setProperty("runtime.log.logsystem.class", VelocitySlf4jLogChute.class.getName());
 		props.setProperty("resource.loader", "app");
 		props.setProperty("app.resource.loader.class", AppTemplateLoader.class.getName());
+		props.setProperty("app.resource.loader.path", templatePath);
 		props.setProperty("app.resource.loader.cache", "false");
 		props.setProperty("app.resource.loader.modificationCheckInterval", "0");
-		
+
 		props.setProperty("eventhandler.referenceinsertion.class", Escaper.class.getName());
 
 		ve = new VelocityEngine(props);

@@ -4,7 +4,7 @@ import net.batkin.forms.server.exception.ServerDataException;
 
 import org.bson.BSONObject;
 
-public class StringField extends FormField<String> {
+public class StringField extends FormField<String, String> {
 
 	public enum SubType {
 		plain, multiline, url, email
@@ -17,8 +17,8 @@ public class StringField extends FormField<String> {
 	private Integer width;
 	private Integer height;
 
-	protected StringField(BSONObject obj) throws ServerDataException {
-		super(obj);
+	public StringField(BSONObject obj) throws ServerDataException {
+		super(obj, String.class);
 		this.defaultValue = getStringValue(obj, "defaultValue", "");
 		this.maxLength = getIntegerValue(obj, "maxLength", null);
 
@@ -70,5 +70,15 @@ public class StringField extends FormField<String> {
 
 	public Integer getHeight() {
 		return height;
+	}
+
+	@Override
+	public String toNativeObject(String obj) {
+		return obj;
+	}
+
+	@Override
+	public String fromNativeObject(String obj) {
+		return obj;
 	}
 }

@@ -6,8 +6,10 @@ import java.util.List;
 import java.util.Set;
 
 import net.batkin.forms.server.db.dataModel.DbDataModel;
+import net.batkin.forms.server.db.dataModel.form.widget.FormWidget;
 import net.batkin.forms.server.db.dataModel.schema.FormSchema;
 import net.batkin.forms.server.db.utility.DatabaseCollection;
+import net.batkin.forms.server.exception.ControllerException;
 import net.batkin.forms.server.exception.NotImplementedException;
 import net.batkin.forms.server.exception.ServerDataException;
 
@@ -26,7 +28,7 @@ public class FormLayout extends DbDataModel {
 	private List<FormLink> links;
 	private List<FormSection> sections;
 
-	public FormLayout(BSONObject obj) throws ServerDataException {
+	public FormLayout(BSONObject obj) throws ControllerException {
 		id = getObjectIdValue(obj, "_id");
 		formName = getStringValue(obj, "formName");
 		schemaName = getStringValue(obj, "schemaName");
@@ -49,7 +51,7 @@ public class FormLayout extends DbDataModel {
 		Set<String> fieldNames = schema.getFieldNames();
 		Set<String> handledNames = new HashSet<String>();
 		for (FormSection section : sections) {
-			for (FormWidget widget : section.getWidgets()) {
+			for (FormWidget<?, ?> widget : section.getWidgets()) {
 				String fieldName = widget.getName();
 				if (fieldNames.contains(fieldName)) {
 					fieldNames.remove(fieldName);
@@ -61,24 +63,6 @@ public class FormLayout extends DbDataModel {
 				}
 			}
 		}
-
-		// Just in case there is anything left over
-		if (!fieldNames.isEmpty()) {
-			List<FormWidget> fieldList = new ArrayList<FormWidget>();
-			for (String fieldName : fieldNames) {
-				String guessedName = guessName(fieldName);
-				FormWidget widget = new FormWidget(fieldName, guessedName, null);
-				fieldList.add(widget);
-			}
-			FormSection section = new FormSection("Additional Information", null, fieldList);
-			sections.add(section);
-		}
-	}
-
-	private String guessName(String fieldName) {
-		char firstChar = fieldName.charAt(0);
-		firstChar = Character.toUpperCase(firstChar);
-		return firstChar + fieldName.substring(1);
 	}
 
 	@Override
@@ -115,7 +99,7 @@ public class FormLayout extends DbDataModel {
 		return sections;
 	}
 
-	public static FormLayout loadByName(String formName) throws ServerDataException {
+	public static FormLayout loadByName(String formName) throws ControllerException {
 		DBObject formData = DatabaseCollection.Layouts.findByString("formName", formName);
 		if (formData == null) {
 			return null;

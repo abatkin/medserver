@@ -68,7 +68,7 @@ public class DatabaseCollection {
 		return DBAccess.getCollection(name);
 	}
 
-	public static void initCollectiond(DB db) {
+	public static void initCollections(DB db) {
 		Users = buildCollection(db, "users", new String[] { "username" });
 		Configs = buildCollection(db, "configs", new String[] { "configName" });
 		Schemas = buildCollection(db, "schemas", new String[] { "schemaName" });

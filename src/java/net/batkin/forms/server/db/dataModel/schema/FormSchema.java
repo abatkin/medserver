@@ -24,20 +24,18 @@ public class FormSchema extends DbDataModel {
 
 	private ObjectId id;
 	private String schemaName;
-	private String resultCollection;
 	private boolean isActive;
-	private List<FormField<?>> fieldList;
-	private Map<String, FormField<?>> fieldMap;
+	private List<FormField<?, ?>> fieldList;
+	private Map<String, FormField<?, ?>> fieldMap;
 
 	public FormSchema(BSONObject obj) throws ControllerException {
 		this.id = getObjectIdValue(obj, "_id");
 		this.schemaName = getStringValue(obj, "schemaName");
-		this.resultCollection = getStringValue(obj, "resultCollection");
 		this.isActive = getBooleanValue(obj, "active", Boolean.TRUE).booleanValue();
-		this.fieldList = new ArrayList<FormField<?>>();
-		this.fieldMap = new HashMap<String, FormField<?>>();
+		this.fieldList = new ArrayList<FormField<?, ?>>();
+		this.fieldMap = new HashMap<String, FormField<?, ?>>();
 		for (BSONObject fieldObj : getArrayValue(obj, "fields", BSONObject.class)) {
-			FormField<?> field = FormField.parseField(fieldObj);
+			FormField<?, ?> field = FormField.parseField(fieldObj);
 			String fieldName = field.getFieldName();
 			fieldList.add(field);
 			if (fieldMap.containsKey(fieldName)) {
@@ -57,11 +55,10 @@ public class FormSchema extends DbDataModel {
 		BasicDBObject obj = new BasicDBObject();
 		putValue(obj, "_id", id);
 		putValue(obj, "schemaName", schemaName);
-		putValue(obj, "resultCollection", resultCollection);
 		putValue(obj, "active", Boolean.valueOf(isActive));
 
 		BasicBSONList bsonFieldList = new BasicBSONList();
-		for (FormField<?> field : fieldList) {
+		for (FormField<?, ?> field : fieldList) {
 			bsonFieldList.add(field.toDbObject());
 		}
 		putValue(obj, "fields", bsonFieldList);
@@ -77,15 +74,11 @@ public class FormSchema extends DbDataModel {
 		return schemaName;
 	}
 
-	public String getResultCollection() {
-		return resultCollection;
-	}
-
 	public boolean isActive() {
 		return isActive;
 	}
 
-	public List<FormField<?>> getFieldList() {
+	public List<FormField<?, ?>> getFieldList() {
 		return fieldList;
 	}
 
@@ -93,7 +86,7 @@ public class FormSchema extends DbDataModel {
 		return new HashSet<String>(fieldMap.keySet());
 	}
 
-	public FormField<?> getField(String name) {
+	public FormField<?, ?> getField(String name) {
 		return fieldMap.get(name);
 	}
 

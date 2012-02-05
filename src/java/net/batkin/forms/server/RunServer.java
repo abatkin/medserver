@@ -1,6 +1,5 @@
 package net.batkin.forms.server;
 
-import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStream;
 import java.util.Properties;
@@ -10,12 +9,14 @@ import net.batkin.forms.server.configuration.Configuration.ConfigurationSource;
 import net.batkin.forms.server.configuration.ConfigurationLoader;
 import net.batkin.forms.server.configuration.ConfigurationOption;
 import net.batkin.forms.server.db.dataModel.Config;
+import net.batkin.forms.server.db.dataModel.form.widget.WidgetManager;
 import net.batkin.forms.server.db.dataModel.schema.fields.FieldManager;
 import net.batkin.forms.server.db.utility.DBAccess;
 import net.batkin.forms.server.exception.ConfigurationException;
 import net.batkin.forms.server.exception.ServerDataException;
 import net.batkin.forms.server.http.RestHandler;
 import net.batkin.forms.server.session.SessionManager;
+import net.batkin.forms.server.util.ConfigBuilder;
 
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.handler.ContextHandler;
@@ -40,6 +41,9 @@ public class RunServer {
 			}
 			mergeDbConfig("server");
 
+			DBAccess.upgradeDatabase();
+			mergeDbConfig("server"); // To pick up new upgrades
+
 			ConfigurationLoader.dumpConfiguration();
 			createServer();
 		} catch (ConfigurationException e) {
@@ -61,11 +65,11 @@ public class RunServer {
 
 	private static void loadInitialConfigurations(String[] args) throws ConfigurationException {
 		Configuration config = Configuration.getInstance();
-		ConfigurationLoader.parseCommandLine(args);
+		ConfigurationLoader.loadCommandLine(args);
 
 		if (config.containsKey(ConfigurationOption.CONFIG_CONFIG_FILE)) {
 			Properties props = loadProperties(config.getValue(ConfigurationOption.CONFIG_CONFIG_FILE));
-			ConfigurationLoader.parseProperties(props);
+			ConfigurationLoader.loadProperties(props);
 		}
 	}
 
@@ -81,18 +85,7 @@ public class RunServer {
 		server.setStopAtShutdown(true);
 		ContextHandlerCollection handler = new ContextHandlerCollection();
 
-		String staticDir = config.getValue(ConfigurationOption.CONFIG_STATIC_DIR, null);
-
-		if (staticDir == null) {
-			File inDevel = new File("./src/webapp");
-			if (inDevel.isDirectory()) {
-				staticDir = new File(inDevel, "static").getCanonicalPath();
-			} else {
-				staticDir = new File("./static").getCanonicalPath();
-			}
-		}
-		logger.info("Using directory [" + staticDir + "] for static files");
-
+		String staticDir = ConfigBuilder.getResourceDirectory("static", ConfigurationOption.CONFIG_STATIC_DIR);
 		ContextHandler staticContext = handler.addContext("/static", staticDir);
 		staticContext.setHandler(new ResourceHandler());
 
@@ -100,6 +93,7 @@ public class RunServer {
 		formsContext.setHandler(new RestHandler(""));
 
 		FieldManager.configure(config);
+		WidgetManager.configure(config);
 
 		server.setHandler(handler);
 		server.start();

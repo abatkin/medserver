@@ -15,7 +15,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class ConfigurationLoader {
-	public static void parseProperties(Properties properties) {
+	public static Map<String, List<String>> parseProperties(Properties properties) {
 		Map<String, List<String>> newValues = new HashMap<String, List<String>>();
 
 		Set<String> multiNames = new HashSet<String>();
@@ -57,11 +57,15 @@ public class ConfigurationLoader {
 			}
 			newValues.put(key, valueList);
 		}
+		return newValues;
+	}
 
+	public static void loadProperties(Properties props) {
+		Map<String, List<String>> newValues = parseProperties(props);
 		Configuration.getInstance().addValues(ConfigurationSource.ConfigFile, newValues);
 	}
 
-	public static void parseCommandLine(String[] args) {
+	public static void loadCommandLine(String[] args) {
 		Map<String, List<String>> newValues = new HashMap<String, List<String>>();
 
 		List<String> previousValues = null;

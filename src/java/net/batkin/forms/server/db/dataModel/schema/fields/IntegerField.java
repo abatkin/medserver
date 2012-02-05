@@ -4,13 +4,13 @@ import net.batkin.forms.server.exception.ServerDataException;
 
 import org.bson.BSONObject;
 
-public class IntegerField extends FormField<Integer> {
+public class IntegerField extends FormField<Integer, Integer> {
 
 	private Integer min;
 	private Integer max;
 
-	protected IntegerField(BSONObject obj) throws ServerDataException {
-		super(obj);
+	public IntegerField(BSONObject obj) throws ServerDataException {
+		super(obj, Integer.class);
 		this.min = getIntegerValue(obj, "min", null);
 		this.max = getIntegerValue(obj, "max", null);
 	}
@@ -29,6 +29,16 @@ public class IntegerField extends FormField<Integer> {
 	public void addAdditionalData(BSONObject obj) {
 		putValue(obj, "min", min);
 		putValue(obj, "max", max);
+	}
+
+	@Override
+	public Integer toNativeObject(Integer obj) {
+		return (Integer) obj;
+	}
+
+	@Override
+	public Integer fromNativeObject(Integer obj) {
+		return obj;
 	}
 
 }
