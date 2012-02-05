@@ -57,12 +57,9 @@
       <a name="#top"></a>
       <div class="page-header">
         <h1>${layout.title}</h1>
-#if("$!{layout.title}" != "")
-        <p>${layout.description}</p>
-#end
+        
+        <h2>${message}</h2>
       </div>
-
-<h1>${message}</h1>
 
     </div> <!-- /container -->
 
@@ -129,33 +126,5 @@
 	  });
 	});
 </script>
-#end
-
-#macro(showSection $group)
-<div class="span8">
-<h3>${group.title}</h3>
-#if("$!{group.instructions}" != "")
-	<p>${group.instructions}</p>
-#end
-
-#foreach($widget in $group.widgets)
-	#showWidget($widget)
-#end
-
-</div>
-#end
-
-#macro(showWidget $widget)
-#set($field = $schema.getField($widget.name))
-#set($data = $result.getValue($widget.name))
-      	<div class="control-group">
-      		<label class="control-label" for="${field.fieldName}">${widget.title}</label>
-      		<div class="controls">
-      			#parse("/widgets/${widget.templateName}")
-#if("$!{widget.helpText}" != "")
-      			<p class="help-block">${widget.helpText}</p>
-#end
-      		</div>
-      	</div>
 #end
 

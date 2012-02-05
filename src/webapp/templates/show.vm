@@ -159,7 +159,12 @@
 #macro(showWidget $widget)
 #set($field = $schema.getField($widget.name))
 #set($data = $result.getValue($widget.name))
-      	<div class="control-group">
+#set($error = $!data.error)
+#set($errorClass = "")
+#if("$!error" != "")
+	#set($errorClass = " error")
+#end
+      	<div class="control-group${errorClass}">
       		<label class="control-label" for="${field.fieldName}">${widget.title}</label>
       		<div class="controls">
       			#parse("/widgets/${widget.templateName}")
