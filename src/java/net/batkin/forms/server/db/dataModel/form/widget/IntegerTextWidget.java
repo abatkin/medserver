@@ -30,7 +30,7 @@ public class IntegerTextWidget extends FormWidget<Integer> {
 				try {
 					return Integer.valueOf(stringData);
 				} catch (Exception e) {
-					throw new FieldValidationException("invalid integer");
+					throw new FieldValidationException("must be a whole number");
 				}
 			}
 

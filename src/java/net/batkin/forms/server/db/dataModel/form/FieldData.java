@@ -19,6 +19,10 @@ public abstract class FieldData<DbType> {
 		return error;
 	}
 
+	public boolean hasError() {
+		return error != null;
+	}
+
 	public Object getObject() {
 		return nativeData;
 	}

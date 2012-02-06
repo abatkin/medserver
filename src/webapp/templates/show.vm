@@ -84,9 +84,7 @@
     <script type="text/javascript" src="http://platform.twitter.com/widgets.js"></script>
     ${h.js('jquery-1.7.1.min.js')}
     ${h.js('bootstrap.min.js')}
-#if(!$layout.links.isEmpty())
-#buildTabScript()
-#end
+    ${h.js('forms-common.js')}
   </body>
 </html>
 
@@ -111,37 +109,6 @@
 	#end
 #end
 
-#macro(buildTabScript)
-<script type="text/javascript">
-	$(document).ready(function() {
-		$("div.navbar ul.nav li a").each(function() {
-		var id = $(this).attr("id");
-		if (id == null) {
-			return;
-		}
-		var result = id.match(/^link-(.+)$/);
-		if (result == null) {
-			return;
-		}
-		var linkName = result[1];
-		if (linkName != 'main') {
-			$("#data-" + linkName).hide();
-		}
-
-		$(this).click(function() {
-			// Set link styling
-			$("div.navbar ul.nav li").removeClass("active");
-			$("div.navbar ul.nav li").has("a#link-" + linkName).addClass("active");
-
-			// Make content appear/disappear
-			$('div[id^="data-"]').hide();
-			$("#data-" + linkName).show();
-		});
-	  });
-	});
-</script>
-#end
-
 #macro(showSection $group)
 <div>
 <h3>${group.title}</h3>
@@ -157,21 +124,16 @@
 #end
 
 #macro(showWidget $widget)
-#set($field = $schema.getField($widget.name))
-#set($data = $result.getValue($widget.name))
-#set($error = $!data.error)
-#set($errorClass = "")
-#if("$!error" != "")
-	#set($errorClass = " error")
-#end
-      	<div class="control-group${errorClass}">
-      		<label class="control-label" for="${field.fieldName}">${widget.title}</label>
-      		<div class="controls">
-      			#parse("/widgets/${widget.templateName}")
-#if("$!{widget.helpText}" != "")
-      			<p class="help-block">${widget.helpText}</p>
-#end
-      		</div>
-      	</div>
+	#set($field = $schema.getField($widget.name))
+	#set($data = $result.getValue($widget.name))
+  	<div class="control-group #if($data.hasError())error#end" id="group-${field.fieldName}">
+  		<label class="control-label" for="${field.fieldName}">${widget.title}</label>
+  		<div class="controls">
+  			#parse("/widgets/${widget.templateName}")
+			#if("$!{widget.helpText}" != "")
+  				<p class="help-block hidden">${widget.helpText}</p>
+			#end
+  		</div>
+  	</div>
 #end
 
