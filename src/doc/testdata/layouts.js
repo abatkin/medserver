@@ -33,6 +33,12 @@
                                         "name" : "lastName",
                                         "title" : "Last Name",
                                         "helpText" : "Please enter your last name"
+                                },
+                                {
+                                		"widgetType" : "boolean",
+                                		"name" : "isAwesome",
+                                		"title" : "Are you awesome",
+                                		"helpText" : "Check here if you are awesome"
                                 }
                         ]
                 }

@@ -27,6 +27,14 @@ public abstract class FieldData<DbType> {
 		return nativeData;
 	}
 
+	public String getOneValue(Map<String, String[]> params, String name) {
+		String[] values = params.get(name);
+		if (values != null && values.length > 0) {
+			return values[0];
+		}
+		return null;
+	}
+
 	public abstract Object convertObject(Map<String, String[]> params) throws FieldValidationException;
 
 	public boolean populateObject(Map<String, String[]> params) {

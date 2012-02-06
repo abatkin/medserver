@@ -21,12 +21,10 @@ public class IntegerTextWidget extends FormWidget<Integer> {
 		return new FieldData<Integer>((FormField<Integer>) field) {
 			@Override
 			public Integer convertObject(Map<String, String[]> params) throws FieldValidationException {
-				String[] values = params.get(getName());
-				if (values == null || values.length == 0) {
+				String stringData = getOneValue(params, getName());
+				if (stringData == null) {
 					return null;
 				}
-
-				String stringData = values[0];
 				try {
 					return Integer.valueOf(stringData);
 				} catch (Exception e) {

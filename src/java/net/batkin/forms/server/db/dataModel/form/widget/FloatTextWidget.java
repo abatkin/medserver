@@ -22,12 +22,10 @@ public class FloatTextWidget extends FormWidget<Float> {
 
 			@Override
 			public Float convertObject(Map<String, String[]> params) throws FieldValidationException {
-				String[] values = params.get(getName());
-				if (values == null || values.length == 0) {
+				String stringData = getOneValue(params, getName());
+				if (stringData == null) {
 					return null;
 				}
-
-				String stringData = values[0];
 				try {
 					return Float.valueOf(stringData);
 				} catch (Exception e) {

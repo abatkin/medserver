@@ -22,11 +22,7 @@ public class StringTextWidget extends FormWidget<String> {
 
 			@Override
 			public String convertObject(Map<String, String[]> params) {
-				String[] values = params.get(getName());
-				if (values != null && values.length > 0) {
-					return values[0];
-				}
-				return null;
+				return getOneValue(params, getName());
 			}
 
 		};

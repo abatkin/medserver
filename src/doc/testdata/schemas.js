@@ -8,6 +8,10 @@
                 {
                         "dataType" : "string",
                         "name" : "lastName",
+                },
+                {
+                		"dataType" : "boolean",
+                		"name" : "isAwesome"
                 }
         ],
         "active" : true

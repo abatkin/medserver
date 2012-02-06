@@ -1,0 +1,2 @@
+<input type="checkbox" name="${field.fieldName}" id="${field.fieldName}" value="checked" #if(${data.object.booleanValue()})checked="checked"#end/>
+<span class="help-inline #if(! $data.hasError())hidden#end">$!data.error</span>
