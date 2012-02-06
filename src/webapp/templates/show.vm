@@ -130,8 +130,9 @@
   		<label class="control-label" for="${field.fieldName}">${widget.title}</label>
   		<div class="controls">
   			#parse("/widgets/${widget.templateName}")
+  			<span class="help-inline #if(! $data.hasError())hidden#end">$!data.error</span>
 			#if("$!{widget.helpText}" != "")
-  				<p class="help-block hidden">${widget.helpText}</p>
+  				<p class="help-block">${widget.helpText}</p>
 			#end
   		</div>
   	</div>

@@ -57,7 +57,9 @@ public class FieldManager {
 
 		public FormField<?> newInstance(BSONObject obj) throws ControllerException {
 			try {
-				return constructor.newInstance(obj);
+				FormField<?> field = constructor.newInstance(obj);
+				field.postInitialize();
+				return field;
 			} catch (InvocationTargetException e) {
 				Throwable target = e.getTargetException();
 				if (target instanceof ControllerException) {

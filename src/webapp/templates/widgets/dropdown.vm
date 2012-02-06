@@ -1,0 +1,5 @@
+<select name="${field.fieldName}" id="${field.fieldName}">
+#foreach($ov in $field.optionValues)
+	<option value="${ov.value}" #if($ov.value == $!data.object)selected="selected"#end>${ov.displayText}</option>
+#end
+</select>

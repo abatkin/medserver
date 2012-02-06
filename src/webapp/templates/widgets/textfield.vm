@@ -1,2 +1,1 @@
 <input class="input-xlarge validatable widget-${widget.templateName} field-${field.dataTypeName}" type="text" name="${field.fieldName}" id="${field.fieldName}" value="$!{data.object}"/>
-<span class="help-inline #if(! $data.hasError())hidden#end">$!data.error</span>

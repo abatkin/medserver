@@ -64,6 +64,10 @@ public abstract class FormField<DbClass> extends DbDataModel {
 
 	public abstract DbClass fromNativeObject(Object obj);
 
+	public void postInitialize() {
+
+	}
+
 	public static FormField<?> parseField(BSONObject fieldObj) throws ControllerException {
 		String dataType = getStringValue(fieldObj, "dataType");
 		return FieldManager.getInstance().getField(dataType, fieldObj);
