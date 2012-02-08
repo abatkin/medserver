@@ -10,12 +10,77 @@
 	<property name="build.dir" value="${basedir}/build" />
 	<property name="deps.dir" value="${build.dir}/deps" />
 
+	<path id="classpath">
+		<fileset dir="build/deps/jar" includes="*.jar" />
+	</path>
+	
+	<!-- ================================= 
+          target: dist              
+         ================================= -->
+    <target name="dist" depends="jar" description="--> Generate Distribution">
+        <mkdir dir="build/dist" />
+    	
+    	<copy todir="build/dist">
+    		<fileset dir="src/webapp" includes="static/** templates/** upgrade/**"  />
+    	</copy>
+    	
+    	<mkdir dir="build/dist/lib" />
+    	<copy todir="build/dist/lib">
+    		<fileset dir="build/deps/jar" includes="*.jar" />
+    		<fileset dir="build" includes="htmlforms.jar" />
+		</copy>
+
+    	<manifestclasspath property="jar.classpath" jarfile="build/dist/run.jar">
+    		<classpath>
+    			<fileset dir="build/dist/lib" includes="*.jar" />
+    		</classpath>
+    	</manifestclasspath>
+    	
+        <jar destfile="build/dist/run.jar">
+        	<manifest>
+        		<attribute name="Main-Class" value="net.batkin.forms.server.RunServer" />
+        		<attribute name="Class-Path" value="${jar.classpath}" />
+        	</manifest>
+		</jar>
+    </target>
+
+	<!-- ================================= 
+          target: jar              
+         ================================= -->
+    <target name="jar" depends="compile" description="--> Generate JAR">
+        <jar destfile="build/htmlforms.jar">
+        	<fileset dir="build/classes" includes="**/*.class"/>
+       	</jar>
+    </target>
+
+	
 	<!-- ================================= 
           target: compile              
          ================================= -->
-	<target name="compile" description="Compile">
-
+	<target name="compile" description="--> Compile">
+		<mkdir dir="build/classes"/>
+		<javac srcdir="src/java"
+         destdir="build/classes"
+         classpathref="classpath"
+         debug="on"
+         includeantruntime="false"
+		/>
 	</target>
+	
+	<!-- ================================= 
+          target: clean              
+         ================================= -->
+    <target name="clean" description="--> Clean">
+        <delete dir="build/classes" failonerror="false" />
+    	<delete dir="build/dist" failonerror="false" />
+    </target>
+
+	<!-- ================================= 
+          target: reallyClean              
+         ================================= -->
+    <target name="reallyClean" description="--> Very clean (removes deps too)">
+        <delete dir="build" failonerror="false" />
+    </target>
 
 	<target name="resolve" depends="init-ivy" description="--> Retrieve dependencies">
 		<ivy:retrieve sync="true" pattern="${deps.dir}/[type]/[artifact]-[revision].[ext]" />
