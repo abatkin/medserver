@@ -20,6 +20,7 @@ import net.batkin.forms.server.http.RequestContext;
 import net.batkin.forms.server.http.velocity.TemplateParameters;
 
 import org.bson.BSONObject;
+import org.slf4j.LoggerFactory;
 
 public class SubmitFormControllerHandler extends ControllerHandler {
 
@@ -60,6 +61,8 @@ public class SubmitFormControllerHandler extends ControllerHandler {
 				try {
 					action.process(data);
 				} catch (Exception e) {
+					// TODO: Show error
+					LoggerFactory.getLogger(SubmitFormControllerHandler.class).warn("Error saving data: " + e.getMessage(), e);
 					break outer;
 				}
 			}
@@ -73,7 +76,6 @@ public class SubmitFormControllerHandler extends ControllerHandler {
 			return;
 		}
 
-		// TODO: Show error
 		ShowFormControllerHandler.showForm(context, layout, schema, result);
 
 	}

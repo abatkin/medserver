@@ -31,14 +31,14 @@ public class Configuration {
 		return values.containsKey(key);
 	}
 
-	public String getValue(String key) {
+	public String getValue(String key) throws ConfigurationException {
 		ConfigurationValue valueObject = values.get(key);
 		if (valueObject != null) {
 			if (valueObject.values.size() > 0) {
 				return valueObject.values.get(0);
 			}
 		}
-		return null;
+		throw new ConfigurationException("Invalid or missing string configuration parameter " + key);
 	}
 
 	public String getValue(String key, String defaultValue) {
