@@ -1,13 +1,17 @@
 package net.batkin.forms.server.db.dataModel.form;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import net.batkin.forms.server.db.dataModel.DbDataModel;
 import net.batkin.forms.server.db.dataModel.action.Action;
 import net.batkin.forms.server.db.dataModel.action.ActionManager;
+import net.batkin.forms.server.db.dataModel.controllerHandler.ControllerHandler;
+import net.batkin.forms.server.db.dataModel.controllerHandler.ControllerHandlerManager;
 import net.batkin.forms.server.db.dataModel.form.widget.FormWidget;
 import net.batkin.forms.server.db.dataModel.schema.FormSchema;
 import net.batkin.forms.server.db.utility.DatabaseCollection;
@@ -31,6 +35,7 @@ public class FormLayout extends DbDataModel {
 	private List<FormSection> sections;
 	private List<FormWidget<?>> allWidgets;
 	private List<Action> actions;
+	private Map<String, ControllerHandler> handlers;
 
 	public FormLayout(BSONObject obj) throws ControllerException {
 		id = getObjectIdValue(obj, "_id");
@@ -65,6 +70,23 @@ public class FormLayout extends DbDataModel {
 				actions.add(action);
 			}
 		}
+
+		handlers = new HashMap<String, ControllerHandler>();
+		List<BSONObject> handlerObjs = getOptionalArrayValue(obj, "handlers", BSONObject.class);
+		handlers.put("show", ControllerHandlerManager.SHOW_HANDLER);
+		handlers.put("submit", ControllerHandlerManager.SUBMIT_HANDLER);
+		ControllerHandlerManager handlerManager = ControllerHandlerManager.getInstance();
+		if (handlerObjs != null && !handlerObjs.isEmpty()) {
+			for (BSONObject handlerObj : handlerObjs) {
+				String handlerType = getStringValue(handlerObj, "controllerHandlerType");
+				ControllerHandler handler = handlerManager.getObject(handlerType, handlerObj);
+				handlers.put(handler.getUrlSuffix(), handler);
+			}
+		}
+	}
+
+	public ControllerHandler getControllerHandler(String name) {
+		return handlers.get(name);
 	}
 
 	public void validateFields(FormSchema schema) throws ServerDataException {

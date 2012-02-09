@@ -11,6 +11,7 @@ import net.batkin.forms.server.configuration.ConfigurationLoader;
 import net.batkin.forms.server.configuration.ConfigurationOption;
 import net.batkin.forms.server.db.dataModel.Config;
 import net.batkin.forms.server.db.dataModel.action.ActionManager;
+import net.batkin.forms.server.db.dataModel.controllerHandler.ControllerHandlerManager;
 import net.batkin.forms.server.db.dataModel.form.widget.WidgetManager;
 import net.batkin.forms.server.db.dataModel.schema.fields.FieldManager;
 import net.batkin.forms.server.db.utility.DBAccess;
@@ -124,6 +125,7 @@ public class RunServer {
 		FieldManager.configure();
 		WidgetManager.configure();
 		ActionManager.configure();
+		ControllerHandlerManager.configure();
 
 		server.setHandler(handler);
 		server.start();
