@@ -2,6 +2,7 @@ package net.batkin.forms.server;
 
 import java.io.FileInputStream;
 import java.io.InputStream;
+import java.net.InetSocketAddress;
 import java.util.Properties;
 
 import net.batkin.forms.server.configuration.Configuration;
@@ -100,7 +101,14 @@ public class RunServer {
 		int port = config.getIntegerValue(ConfigurationOption.CONFIG_HTTP_SERVER_PORT, 8080);
 		logger.info("Starting web server on port " + port);
 
-		server = new Server(port);
+		String bindHost = config.getValue(ConfigurationOption.CONFIG_HTTP_SERVER_HOST, null);
+		InetSocketAddress addr;
+		if (bindHost != null) {
+			addr = new InetSocketAddress(bindHost, port);
+		} else {
+			addr = new InetSocketAddress(port);
+		}
+		server = new Server(addr);
 		server.setGracefulShutdown(5000);
 		server.setStopAtShutdown(true);
 		ContextHandlerCollection handler = new ContextHandlerCollection();
