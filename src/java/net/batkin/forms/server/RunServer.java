@@ -120,8 +120,8 @@ public class RunServer {
 		ContextHandler formsContext = handler.addContext("/", "/");
 		formsContext.setHandler(new RestHandler(""));
 
-		FieldManager.configure(config);
-		WidgetManager.configure(config);
+		FieldManager.configure();
+		WidgetManager.configure();
 
 		server.setHandler(handler);
 		server.start();

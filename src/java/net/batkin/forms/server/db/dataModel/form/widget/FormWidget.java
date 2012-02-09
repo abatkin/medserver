@@ -59,7 +59,7 @@ public abstract class FormWidget<DbType> extends DbDataModel {
 	@SuppressWarnings("unchecked")
 	public static <DbType, NativeType> FormWidget<DbType> parseWidget(BSONObject widgetObj) throws ControllerException {
 		String widgetType = getStringValue(widgetObj, "widgetType");
-		return (FormWidget<DbType>) WidgetManager.getInstance().getWidget(widgetType, widgetObj);
+		return (FormWidget<DbType>) WidgetManager.getInstance().getObject(widgetType, widgetObj);
 	}
 
 }

@@ -70,6 +70,6 @@ public abstract class FormField<DbClass> extends DbDataModel {
 
 	public static FormField<?> parseField(BSONObject fieldObj) throws ControllerException {
 		String dataType = getStringValue(fieldObj, "dataType");
-		return FieldManager.getInstance().getField(dataType, fieldObj);
+		return FieldManager.getInstance().getObject(dataType, fieldObj);
 	}
 }
