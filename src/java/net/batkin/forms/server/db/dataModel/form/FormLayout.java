@@ -6,6 +6,8 @@ import java.util.List;
 import java.util.Set;
 
 import net.batkin.forms.server.db.dataModel.DbDataModel;
+import net.batkin.forms.server.db.dataModel.action.Action;
+import net.batkin.forms.server.db.dataModel.action.ActionManager;
 import net.batkin.forms.server.db.dataModel.form.widget.FormWidget;
 import net.batkin.forms.server.db.dataModel.schema.FormSchema;
 import net.batkin.forms.server.db.utility.DatabaseCollection;
@@ -28,6 +30,7 @@ public class FormLayout extends DbDataModel {
 	private List<FormLink> links;
 	private List<FormSection> sections;
 	private List<FormWidget<?>> allWidgets;
+	private List<Action> actions;
 
 	public FormLayout(BSONObject obj) throws ControllerException {
 		id = getObjectIdValue(obj, "_id");
@@ -48,6 +51,19 @@ public class FormLayout extends DbDataModel {
 			sections.add(section);
 
 			allWidgets.addAll(section.getWidgets());
+		}
+
+		actions = new ArrayList<Action>();
+		List<BSONObject> actionObjs = getOptionalArrayValue(obj, "actions", BSONObject.class);
+		ActionManager actionManager = ActionManager.getInstance();
+		if (actionObjs == null || actionObjs.isEmpty()) {
+			actions.add(ActionManager.DEFAULT_ACTION);
+		} else {
+			for (BSONObject actionObj : actionObjs) {
+				String actionType = getStringValue(actionObj, "actionType");
+				Action action = actionManager.getObject(actionType, actionObj);
+				actions.add(action);
+			}
 		}
 	}
 
@@ -105,6 +121,10 @@ public class FormLayout extends DbDataModel {
 
 	public List<FormWidget<?>> getAllWidgets() {
 		return allWidgets;
+	}
+
+	public List<Action> getActions() {
+		return actions;
 	}
 
 	public static FormLayout loadByName(String formName) throws ControllerException {

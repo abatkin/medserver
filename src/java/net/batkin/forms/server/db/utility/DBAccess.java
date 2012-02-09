@@ -43,6 +43,10 @@ public class DBAccess {
 		db = mongo.getDB(dbName);
 	}
 
+	public static DB getDb() {
+		return db;
+	}
+
 	public static DBCollection getCollection(String collectionName) {
 		return db.getCollection(collectionName);
 	}
