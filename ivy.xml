@@ -1,5 +1,5 @@
 <ivy-module version="2.0">
-	<info organisation="net.batkin" module="medserver" />
+	<info organisation="net.batkin" module="formserver" />
 	<dependencies>
 		<dependency org="org.mongodb" name="mongo-java-driver" rev="2.7.2"/>
 		<dependency org="org.slf4j" name="slf4j-api" rev="1.6.4"/>

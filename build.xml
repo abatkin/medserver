@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- ====================================================================== 
-     medserver    
+     formserver    
      ====================================================================== -->
-<project name="medserver" default="compile" basedir="." xmlns:ivy="antlib:org.apache.ivy.ant">
+<project name="formserver" default="compile" basedir="." xmlns:ivy="antlib:org.apache.ivy.ant">
 	<description>
-            Med Server
+            HTML Form Server
     </description>
 
 	<property name="build.dir" value="${basedir}/build" />
