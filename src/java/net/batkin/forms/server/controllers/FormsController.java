@@ -101,7 +101,13 @@ public class FormsController extends Controller {
 		if (success) {
 			ActionData data = new ActionData(schema, layout, result);
 			for (Action action : layout.getActions()) {
-				action.process(data);
+				try {
+					action.process(data);
+				} catch (Exception e) {
+					// TODO: Show error
+					showForm(context, layout, schema, result);
+					return;
+				}
 			}
 
 			TemplateParameters params = new TemplateParameters();

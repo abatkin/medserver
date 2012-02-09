@@ -23,7 +23,7 @@ public abstract class Action extends DbDataModel {
 
 	public abstract String getActionName();
 
-	public abstract void process(ActionData data);
+	public abstract void process(ActionData data) throws Exception;
 
 	public String getStepName() {
 		return stepName;
