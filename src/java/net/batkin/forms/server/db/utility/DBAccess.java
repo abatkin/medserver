@@ -30,9 +30,6 @@ public class DBAccess {
 	private static DB db;
 
 	public static void connect() throws Exception {
-		if (db != null) {
-			throw new RuntimeException("Already connected to database");
-		}
 		Configuration config = Configuration.getInstance();
 		String dbHost = config.getValue(ConfigurationOption.CONFIG_DB_HOST, "127.0.0.1");
 		int dbPort = config.getIntegerValue(ConfigurationOption.CONFIG_DB_PORT, -1);

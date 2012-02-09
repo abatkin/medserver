@@ -11,5 +11,6 @@
 		<dependency org="commons-logging" name="commons-logging" rev="1.1.1" transitive="false"/>
 		<dependency org="commons-lang" name="commons-lang" rev="2.6" transitive="false"/>
 		<dependency org="commons-collections" name="commons-collections" rev="3.2.1" transitive="false"/>
+		<dependency org="commons-daemon" name="commons-daemon" rev="1.0.8" transitive="false"/>
 	</dependencies>
 </ivy-module>

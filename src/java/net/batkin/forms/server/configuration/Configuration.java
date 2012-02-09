@@ -11,7 +11,11 @@ import net.batkin.forms.server.exception.ConfigurationException;
 
 public class Configuration {
 
-	private static Configuration instance = new Configuration();
+	private static Configuration instance;
+
+	public static void initialize() {
+		instance = new Configuration();
+	}
 
 	public static Configuration getInstance() {
 		return instance;

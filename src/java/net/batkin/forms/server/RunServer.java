@@ -27,43 +27,63 @@ import org.slf4j.LoggerFactory;
 
 public class RunServer {
 
-	private static Server server;
-
 	public static void main(String[] args) throws Exception {
+		RunServer runServer = new RunServer();
+		runServer.init(args);
+
 		try {
-			loadInitialConfigurations(args);
-			DBAccess.connect();
-			DBAccess.initDatabase();
-
-			Configuration config = Configuration.getInstance();
-			if (config.containsKey(ConfigurationOption.CONFIG_SERVER_NAME)) {
-				mergeDbConfig("server." + config.getValue(ConfigurationOption.CONFIG_SERVER_NAME));
-			}
-			mergeDbConfig("server");
-
-			DBAccess.upgradeDatabase();
-			mergeDbConfig("server"); // To pick up new upgrades
-
-			ConfigurationLoader.dumpConfiguration();
-			createServer();
+			runServer.start();
 		} catch (ConfigurationException e) {
 			fatalError(e.getMessage(), null);
 		} catch (Exception e) {
 			fatalError("Fatal Startup Error: " + e.getMessage(), e);
 		}
 
-		server.join();
-		LoggerFactory.getLogger(RunServer.class).warn("Server has been shut down");
+		try {
+			runServer.server.join();
+		} finally {
+			runServer.stop();
+		}
 	}
 
-	private static void mergeDbConfig(String name) throws ServerDataException {
+	private String[] args;
+	private Server server;
+
+	public void init(String[] args) throws InterruptedException {
+		this.args = args;
+	}
+
+	public void start() throws Exception {
+		Configuration.initialize();
+		loadInitialConfigurations(args);
+		DBAccess.connect();
+		DBAccess.initDatabase();
+
+		Configuration config = Configuration.getInstance();
+		if (config.containsKey(ConfigurationOption.CONFIG_SERVER_NAME)) {
+			mergeDbConfig("server." + config.getValue(ConfigurationOption.CONFIG_SERVER_NAME));
+		}
+		mergeDbConfig("server");
+
+		DBAccess.upgradeDatabase();
+		mergeDbConfig("server"); // To pick up new upgrades
+
+		ConfigurationLoader.dumpConfiguration();
+		createServer();
+	}
+
+	public void stop() {
+		SessionManager.getInstance().stop();
+	}
+
+	private void mergeDbConfig(String name) throws ServerDataException {
 		Config config = Config.loadByName(name);
 		if (config != null) {
 			Configuration.getInstance().addValues(ConfigurationSource.createDatabaseSource(name), config);
 		}
 	}
 
-	private static void loadInitialConfigurations(String[] args) throws ConfigurationException {
+	private void loadInitialConfigurations(String[] args) throws ConfigurationException {
 		Configuration config = Configuration.getInstance();
 		ConfigurationLoader.loadCommandLine(args);
 
@@ -73,7 +93,7 @@ public class RunServer {
 		}
 	}
 
-	private static void createServer() throws Exception {
+	private void createServer() throws Exception {
 		Logger logger = LoggerFactory.getLogger(RunServer.class);
 
 		Configuration config = Configuration.getInstance();
@@ -104,7 +124,7 @@ public class RunServer {
 		logger.info("Server started");
 	}
 
-	private static Properties loadProperties(String filename) throws ConfigurationException {
+	private Properties loadProperties(String filename) throws ConfigurationException {
 		try {
 			InputStream istream = new FileInputStream(filename);
 			Properties props = new Properties();
