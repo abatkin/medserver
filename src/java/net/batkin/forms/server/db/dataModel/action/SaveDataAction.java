@@ -42,6 +42,7 @@ public class SaveDataAction extends Action {
 		BasicDBObject obj = new BasicDBObject();
 		obj.append("formName", data.getLayout().getFormName());
 		obj.append("submittedAt", data.getSubmittedAt());
+		obj.append("submissionId", data.getSubmissionId());
 
 		BasicBSONList valueList = buildDbValueList(data.getSchema(), data.getResult());
 		obj.append("values", valueList);
