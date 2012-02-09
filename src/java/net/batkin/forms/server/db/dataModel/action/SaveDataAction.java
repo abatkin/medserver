@@ -1,6 +1,8 @@
 package net.batkin.forms.server.db.dataModel.action;
 
 import net.batkin.forms.server.db.dataModel.form.FieldData;
+import net.batkin.forms.server.db.dataModel.form.FormResult;
+import net.batkin.forms.server.db.dataModel.schema.FormSchema;
 import net.batkin.forms.server.db.dataModel.schema.fields.FormField;
 import net.batkin.forms.server.db.utility.DBAccess;
 import net.batkin.forms.server.db.utility.DatabaseCollection;
@@ -41,9 +43,17 @@ public class SaveDataAction extends Action {
 		obj.append("formName", data.getLayout().getFormName());
 		obj.append("submittedAt", data.getSubmittedAt());
 
+		BasicBSONList valueList = buildDbValueList(data.getSchema(), data.getResult());
+		obj.append("values", valueList);
+
+		DatabaseCollection collection = new DatabaseCollection(DBAccess.getDb(), collectionName);
+		collection.saveDbObject(obj);
+	}
+
+	public static BasicBSONList buildDbValueList(FormSchema schema, FormResult result) {
 		BasicBSONList valueList = new BasicBSONList();
-		for (FormField<?> field : data.getSchema().getFieldList()) {
-			FieldData<?> value = data.getResult().getValue(field.getFieldName());
+		for (FormField<?> field : schema.getFieldList()) {
+			FieldData<?> value = result.getValue(field.getFieldName());
 			Object nativeObject = value.getObject();
 			Object dbObj = field.convertToDb(nativeObject);
 
@@ -54,10 +64,6 @@ public class SaveDataAction extends Action {
 			valueList.add(valueObj);
 		}
 
-		obj.append("values", valueList);
-
-		DatabaseCollection collection = new DatabaseCollection(DBAccess.getDb(), collectionName);
-		collection.saveDbObject(obj);
+		return valueList;
 	}
-
 }

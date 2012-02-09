@@ -33,7 +33,7 @@ public class DropdownWidget extends FormWidget<Integer> {
 				try {
 					return Integer.valueOf(stringData);
 				} catch (Exception e) {
-					throw new FieldValidationException("invalid value");
+					throw new FieldValidationException("invalid value", field);
 				}
 
 			}

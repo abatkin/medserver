@@ -29,7 +29,7 @@ public class FloatTextWidget extends FormWidget<Float> {
 				try {
 					return Float.valueOf(stringData);
 				} catch (Exception e) {
-					throw new FieldValidationException("invalid decimal number");
+					throw new FieldValidationException("invalid decimal number", field);
 				}
 			}
 		};
