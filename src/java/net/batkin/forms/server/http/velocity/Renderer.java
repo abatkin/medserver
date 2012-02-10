@@ -28,6 +28,7 @@ public class Renderer {
 		props.setProperty("app.resource.loader.path", templatePath);
 		props.setProperty("app.resource.loader.cache", "false");
 		props.setProperty("app.resource.loader.modificationCheckInterval", "0");
+		props.setProperty("velocimacro.library", "/global/page-components.vm");
 
 		props.setProperty("eventhandler.referenceinsertion.class", Escaper.class.getName());
 
