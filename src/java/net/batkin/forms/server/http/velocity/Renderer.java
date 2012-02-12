@@ -1,5 +1,6 @@
 package net.batkin.forms.server.http.velocity;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.Writer;
 import java.util.Properties;
@@ -18,6 +19,11 @@ public class Renderer {
 
 	public Renderer(String urlBase) throws IOException {
 		String templatePath = ConfigBuilder.getResourceDirectory("templates", ConfigurationOption.CONFIG_TEMPLATE_DIR);
+
+		String customTemplatePath = ConfigBuilder.getResourceDirectory("custom-templates", ConfigurationOption.CONFIG_CUSTOM_TEMPLATE_DIR);
+		if (new File(customTemplatePath).isDirectory()) {
+			templatePath = customTemplatePath + "," + templatePath;
+		}
 
 		Properties props = new Properties();
 		props.setProperty("input.encoding", "UTF-8");

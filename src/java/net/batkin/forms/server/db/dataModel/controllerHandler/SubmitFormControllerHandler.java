@@ -7,6 +7,7 @@ import javax.servlet.http.HttpServletRequest;
 
 import net.batkin.forms.server.db.dataModel.action.Action;
 import net.batkin.forms.server.db.dataModel.action.ActionData;
+import net.batkin.forms.server.db.dataModel.action.RenderAware;
 import net.batkin.forms.server.db.dataModel.form.FieldData;
 import net.batkin.forms.server.db.dataModel.form.FormLayout;
 import net.batkin.forms.server.db.dataModel.form.FormResult;
@@ -57,8 +58,10 @@ public class SubmitFormControllerHandler extends ControllerHandler {
 
 		outer: if (success) {
 			ActionData data = new ActionData(schema, layout, result);
+			Action lastAction = null;
 			for (Action action : layout.getActions()) {
 				try {
+					lastAction = action;
 					action.process(data);
 				} catch (Exception e) {
 					// TODO: Show error
@@ -71,11 +74,20 @@ public class SubmitFormControllerHandler extends ControllerHandler {
 			params.add("layout", layout);
 			params.add("schema", schema);
 			params.add("result", result);
+			params.add("actionData", data);
 			params.add("message", "Your information have been saved");
-			Controller.sendHtmlResponse(context, "/saved", params);
+
+			String templateName = "/saved";
+			if (lastAction != null && lastAction instanceof RenderAware) {
+				RenderAware aware = (RenderAware) lastAction;
+				aware.populateContext(params);
+				templateName = aware.getTemplateName();
+			}
+			Controller.sendHtmlResponse(context, templateName, params);
 			return;
 		}
 
+		// On Error
 		ShowFormControllerHandler.showForm(context, layout, schema, result);
 
 	}

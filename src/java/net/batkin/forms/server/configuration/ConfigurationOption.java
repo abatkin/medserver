@@ -15,6 +15,7 @@ public class ConfigurationOption {
 	public static final String CONFIG_DB_UPGRADES_DIR = "dbUpgradesDir";
 	public static final String CONFIG_APP_ROOT_DIR = "appRootDir";
 	public static final String CONFIG_TEMPLATE_DIR = "templateDir";
+	public static final String CONFIG_CUSTOM_TEMPLATE_DIR = "customTemplateDir";
 	public static final String CONFIG_DEFAULT_ACTION_STEP_NAME = "defaultActionStepName";
 	public static final String CONFIG_DEFAULT_COLLECTION_NAME = "defaultActionCollectionName";
 }
