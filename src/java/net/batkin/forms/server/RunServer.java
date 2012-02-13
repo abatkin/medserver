@@ -19,6 +19,7 @@ import net.batkin.forms.server.exception.ConfigurationException;
 import net.batkin.forms.server.exception.ServerDataException;
 import net.batkin.forms.server.http.RestHandler;
 import net.batkin.forms.server.session.SessionManager;
+import net.batkin.forms.server.upgrade.ServerUpgrader;
 import net.batkin.forms.server.util.ConfigBuilder;
 
 import org.eclipse.jetty.server.Server;
@@ -68,7 +69,7 @@ public class RunServer {
 		}
 		mergeDbConfig("server");
 
-		DBAccess.upgradeDatabase();
+		ServerUpgrader.upgradeDatabase();
 		mergeDbConfig("server"); // To pick up new upgrades
 
 		ConfigurationLoader.dumpConfiguration();

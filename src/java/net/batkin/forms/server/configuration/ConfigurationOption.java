@@ -12,7 +12,8 @@ public class ConfigurationOption {
 	public static final String CONFIG_SESSION_VALIDITY_TIME = "sessionValidityTime";
 	public static final String CONFIG_STATIC_DIR = "staticFilesDir";
 	public static final String CONFIG_DB_CURRENT_VERSION = "dbVersion";
-	public static final String CONFIG_DB_UPGRADES_DIR = "dbUpgradesDir";
+	public static final String CONFIG_UPGRADES_DIR = "upgradesDir";
+	public static final String CONFIG_CUSTOM_UPGRADES_DIR = "customUpgradesDir";
 	public static final String CONFIG_APP_ROOT_DIR = "appRootDir";
 	public static final String CONFIG_TEMPLATE_DIR = "templateDir";
 	public static final String CONFIG_CUSTOM_TEMPLATE_DIR = "customTemplateDir";

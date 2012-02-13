@@ -1,0 +1,44 @@
+{
+	name: 'base',
+	depends: [],
+	upgrades: [
+		{
+			type: 'managedTypes',
+			ensureTypes: [
+				{
+					typeName: 'field',
+					values: [
+						{name: "string", javaClass: "net.batkin.forms.server.db.dataModel.schema.fields.StringField"},
+						{name: "integer", javaClass: "net.batkin.forms.server.db.dataModel.schema.fields.IntegerField"},
+						{name: "float", javaClass: "net.batkin.forms.server.db.dataModel.schema.fields.FloatField"},
+						{name: "boolean", javaClass: "net.batkin.forms.server.db.dataModel.schema.fields.BooleanField"},
+						{name: "selectFromOptions", javaClass: "net.batkin.forms.server.db.dataModel.schema.fields.SelectFromOptionsField"}
+					]
+				},
+				{
+					typeName: 'widget',
+					values: [
+						{name: "string", javaClass: "net.batkin.forms.server.db.dataModel.form.widget.StringTextWidget"},
+						{name: "integer", javaClass: "net.batkin.forms.server.db.dataModel.form.widget.IntegerTextWidget"},
+						{name: "float", javaClass: "net.batkin.forms.server.db.dataModel.form.widget.FloatTextWidget"},
+						{name: "checkbox", javaClass: "net.batkin.forms.server.db.dataModel.form.widget.CheckboxWidget"},
+						{name: "dropdown", javaClass: "net.batkin.forms.server.db.dataModel.form.widget.DropdownWidget"}
+					]
+				},
+				{
+					typeName: 'action',
+					values: [
+						{name: "savedata", javaClass: "net.batkin.forms.server.db.dataModel.action.SaveDataAction"}
+					]
+				},
+				{
+					typeName: 'controllerHandler',
+					values: [
+						{name: "show", javaClass: "net.batkin.forms.server.db.dataModel.controllerHandler.ShowFormControllerHandler"},
+						{name: "submit", javaClass: "net.batkin.forms.server.db.dataModel.controllerHandler.SubmitFormControllerHandler"}
+					]
+				}
+			]
+		}
+	]
+}
