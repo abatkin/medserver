@@ -128,6 +128,11 @@ public class Configuration {
 			return false;
 		}
 
+		@Override
+		public int hashCode() {
+			return name.hashCode();
+		}
+
 		public static final ConfigurationSource CommandLine = new ConfigurationSource("CommandLine");
 		public static final ConfigurationSource ConfigFile = new ConfigurationSource("ConfigFile");
 		public static final ConfigurationSource Computed = new ConfigurationSource("Computed");

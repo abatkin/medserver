@@ -12,5 +12,6 @@
 		<dependency org="commons-lang" name="commons-lang" rev="2.6" transitive="false"/>
 		<dependency org="commons-collections" name="commons-collections" rev="3.2.1" transitive="false"/>
 		<dependency org="commons-daemon" name="commons-daemon" rev="1.0.8" transitive="false"/>
+		<dependency org="org.json" name="json" rev="20090211"/>
 	</dependencies>
 </ivy-module>
