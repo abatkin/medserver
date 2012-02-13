@@ -19,4 +19,6 @@ public class ConfigurationOption {
 	public static final String CONFIG_CUSTOM_TEMPLATE_DIR = "customTemplateDir";
 	public static final String CONFIG_DEFAULT_ACTION_STEP_NAME = "defaultActionStepName";
 	public static final String CONFIG_DEFAULT_COLLECTION_NAME = "defaultActionCollectionName";
+	public static final String CONFIG_FORMS_DIR = "formsDir";
+	public static final String CONFIG_RELOAD_ALL_FORMS = "reloadAllForms";
 }

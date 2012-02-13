@@ -17,6 +17,7 @@ import net.batkin.forms.server.db.dataModel.schema.fields.FieldManager;
 import net.batkin.forms.server.db.utility.DBAccess;
 import net.batkin.forms.server.exception.ConfigurationException;
 import net.batkin.forms.server.exception.ServerDataException;
+import net.batkin.forms.server.formLoader.FormLoader;
 import net.batkin.forms.server.http.RestHandler;
 import net.batkin.forms.server.session.SessionManager;
 import net.batkin.forms.server.upgrade.ServerUpgrader;
@@ -127,6 +128,8 @@ public class RunServer {
 		WidgetManager.configure();
 		ActionManager.configure();
 		ControllerHandlerManager.configure();
+
+		FormLoader.loadForms();
 
 		server.setHandler(handler);
 		server.start();

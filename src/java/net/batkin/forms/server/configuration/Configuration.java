@@ -51,6 +51,14 @@ public class Configuration {
 		return defaultValue;
 	}
 
+	public boolean getBooleanValue(String key, boolean defaultValue) {
+		String stringValue = getValue(key, null);
+		if (stringValue == null) {
+			return defaultValue;
+		}
+		return stringValue.equals("true");
+	}
+
 	public int getIntegerValue(String key) throws ConfigurationException {
 		try {
 			String value = getValue(key);
