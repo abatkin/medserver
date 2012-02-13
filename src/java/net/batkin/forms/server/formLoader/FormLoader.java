@@ -38,6 +38,9 @@ public class FormLoader {
 			}
 		});
 
+		if (jsonFiles == null) {
+			return;
+		}
 		for (File jsonFile : jsonFiles) {
 			if (jsonFile.getName().endsWith("-layout.json")) {
 				processLayout(reloadAllForms, jsonFile);

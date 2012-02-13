@@ -21,7 +21,7 @@
         <mkdir dir="build/dist" />
     	
     	<copy todir="build/dist">
-    		<fileset dir="src/webapp" includes="static/** templates/** upgrade/**"  />
+    		<fileset dir="src/webapp" includes="static/** templates/** upgrades/**"  />
     	</copy>
     	
     	<mkdir dir="build/dist/lib" />

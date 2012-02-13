@@ -58,6 +58,9 @@ public class ServerUpgrader {
 			}
 		});
 
+		if (files == null) {
+			return;
+		}
 		Set<ServerUpgrade> upgrades = new HashSet<ServerUpgrade>();
 		for (File file : files) {
 			try {
