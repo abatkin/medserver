@@ -1,4 +1,7 @@
 <select name="${field.fieldName}" id="${field.fieldName}">
+#if($widget.selectOne)
+<option value="$!{widget.selectOneValue}" #if("$!data.object" == "")selected="selected"#end>${widget.selectOneText}</option>
+#end
 #foreach($ov in $field.optionValues)
 	<option value="${ov.value}" #if("$ov.value" == "$!data.object")selected="selected"#end>${ov.displayText}</option>
 #end
