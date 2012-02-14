@@ -3,6 +3,7 @@ package net.batkin.forms.server.db.dataModel.form.widget;
 import java.util.Map;
 
 import net.batkin.forms.server.db.dataModel.form.FieldData;
+import net.batkin.forms.server.db.dataModel.schema.fields.FieldValidationException;
 import net.batkin.forms.server.db.dataModel.schema.fields.FormField;
 import net.batkin.forms.server.exception.ServerDataException;
 
@@ -22,9 +23,21 @@ public class StringTextWidget extends FormWidget<String> {
 
 			@Override
 			public String convertObject(Map<String, String[]> params) {
-				return getOneValue(params, getName());
+				String stringValue = getOneValue(params, getName());
+				if (stringValue != null) {
+					return stringValue.trim();
+				}
+				return null;
 			}
 
+			@Override
+			public void validate() throws FieldValidationException {
+				super.validate();
+
+				if (field.getRequired() && "".equals(nativeData)) {
+					throw new FieldValidationException("required", field);
+				}
+			}
 		};
 	}
 

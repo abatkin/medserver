@@ -13,11 +13,13 @@ import com.mongodb.DBObject;
 public abstract class FormField<DbClass> extends DbDataModel {
 
 	private Class<DbClass> dbClass;
+	private Boolean required;
 	private String fieldName;
 
 	protected FormField(BSONObject obj, Class<DbClass> dbClass) throws ServerDataException {
 		this.fieldName = getStringValue(obj, "name");
 		this.dbClass = dbClass;
+		this.required = getBooleanValue(obj, "required", Boolean.FALSE);
 	}
 
 	@Override
@@ -26,6 +28,7 @@ public abstract class FormField<DbClass> extends DbDataModel {
 		putValue(obj, "name", fieldName);
 		putValue(obj, "defaultValue", getDefaultValue());
 		putValue(obj, "dataType", getDataTypeName());
+		putValue(obj, "required", required);
 		addAdditionalData(obj);
 		return obj;
 	}
@@ -33,6 +36,10 @@ public abstract class FormField<DbClass> extends DbDataModel {
 	@Override
 	public ObjectId getObjectId() {
 		throw new RuntimeException("FormFields do not have ObjectIds");
+	}
+
+	public boolean getRequired() {
+		return required.booleanValue();
 	}
 
 	public String getFieldName() {

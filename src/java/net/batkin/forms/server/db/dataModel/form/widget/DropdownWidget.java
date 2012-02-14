@@ -50,12 +50,16 @@ public class DropdownWidget extends FormWidget<Integer> {
 					return null;
 				}
 				try {
-					return Integer.valueOf(stringData);
+					Integer integerValue = Integer.valueOf(stringData);
+					if (selectOne && integerValue.equals(selectOneValue)) {
+						return null;
+					}
+					return integerValue;
 				} catch (Exception e) {
 					throw new FieldValidationException("invalid value", field);
 				}
-
 			}
+
 		};
 	}
 }

@@ -7,7 +7,7 @@ import net.batkin.forms.server.db.dataModel.schema.fields.FormField;
 
 public abstract class FieldData<DbType> {
 
-	private Object nativeData;
+	protected Object nativeData;
 	protected FormField<DbType> field;
 	private String error;
 
@@ -40,9 +40,8 @@ public abstract class FieldData<DbType> {
 	public boolean populateObject(Map<String, String[]> params) {
 		try {
 			nativeData = convertObject(params);
-			if (nativeData != null) {
-				validate();
-			} else {
+			validate();
+			if (nativeData == null) {
 				setDefault();
 			}
 			return true;
@@ -59,6 +58,8 @@ public abstract class FieldData<DbType> {
 	}
 
 	public void validate() throws FieldValidationException {
-
+		if (field.getRequired() && nativeData == null) {
+			throw new FieldValidationException("required", field);
+		}
 	}
 }

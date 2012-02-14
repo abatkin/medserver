@@ -11,6 +11,10 @@ public class BooleanField extends FormField<Boolean> {
 	public BooleanField(BSONObject obj) throws ServerDataException {
 		super(obj, Boolean.class);
 		this.defaultValue = getBooleanValue(obj, "defaultValue", Boolean.FALSE);
+
+		if (getRequired()) {
+			throw new ServerDataException("Boolean fields (" + getFieldName() + ") can not be marked as required");
+		}
 	}
 
 	@Override
