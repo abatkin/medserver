@@ -11,14 +11,12 @@ import org.bson.BSONObject;
 
 public class DropdownWidget extends FormWidget<Integer> {
 
-	private Integer selectOneValue;
 	private String selectOneText;
 	private boolean selectOne;
 
 	public DropdownWidget(BSONObject obj) throws ServerDataException {
 		super(obj);
 		selectOne = getBooleanValue(obj, "selectOne", Boolean.FALSE).booleanValue();
-		selectOneValue = getIntegerValue(obj, "selectOneValue", null);
 		selectOneText = getStringValue(obj, "selectOneText", "Select One...");
 	}
 
@@ -35,10 +33,6 @@ public class DropdownWidget extends FormWidget<Integer> {
 		return selectOneText;
 	}
 
-	public Integer getSelectOneValue() {
-		return selectOneValue;
-	}
-
 	@SuppressWarnings("unchecked")
 	@Override
 	public FieldData<Integer> buildFieldData(FormField<?> field) {
@@ -51,9 +45,6 @@ public class DropdownWidget extends FormWidget<Integer> {
 				}
 				try {
 					Integer integerValue = Integer.valueOf(stringData);
-					if (selectOne && integerValue.equals(selectOneValue)) {
-						return null;
-					}
 					return integerValue;
 				} catch (Exception e) {
 					throw new FieldValidationException("invalid value", field);

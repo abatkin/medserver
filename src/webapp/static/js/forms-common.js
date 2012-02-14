@@ -26,32 +26,37 @@ function setupTabs() {
 }
 
 function failValidation(id, error) {
-	console.log("fail: " + id);
 	$("#group-" + id).addClass("error");
-	$("#group-" + id + " span.help-inline").text(error).show();
+	$("#group-" + id + " span.help-inline").text(error).removeClass('hidden');
 }
 
 function successValidation(id) {
-	console.log("success");
 	$("#group-" + id).removeClass("error");
-	$("#group-" + id + " span.help-inline").hide();
+	$("#group-" + id + " span.help-inline").addClass('hidden');
+}
+
+function addRule(selector, error, validator) {
+	selector.blur(function() {
+		var id = $(this).attr('id');
+		if (validator(this)) {
+			successValidation(id);
+		} else {
+			failValidation(id, error);
+		}
+	});
 }
 
 function addRegexRule(fieldType, regex, error) {
-	console.log("add rule");
-	$(".validatable.field-" + fieldType).blur(function() {
-		console.log("blur");
-		var id = $(this).attr('id');
-		if ($(this).val().search(regex) < 0) {
-			failValidation(id, error);
-		} else {
-			successValidation(id);
-		}
+	addRule($(".validatable.field-" + fieldType), error, function(element) {
+		return $(element).val().search(regex) >= 0;
 	});
 }
 
 function setupValidation() {
 	addRegexRule("integer", /^\d*$/, "must be a whole number");
+	addRule($(".validatable.required"), "required", function(element) {
+		return $.trim($(element).val()).length > 0;
+	});
 }
 
 $(document).ready(function() {

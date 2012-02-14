@@ -1,1 +1,1 @@
-<input class="input-xlarge validatable widget-${widget.templateName} field-${field.dataTypeName}" type="text" name="${field.fieldName}" id="${field.fieldName}" value="$!{data.object}"/>
+<input class="input-xlarge validatable widget-${widget.templateName} field-${field.dataTypeName} #if($field.required)required#end" type="text" name="${field.fieldName}" id="${field.fieldName}" value="$!{data.object}"/>

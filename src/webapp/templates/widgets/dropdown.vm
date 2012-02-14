@@ -1,6 +1,6 @@
-<select name="${field.fieldName}" id="${field.fieldName}">
+<select name="${field.fieldName}" id="${field.fieldName}" class="input-xlarge validatable widget-${widget.templateName} field-${field.dataTypeName} #if($field.required)required#end">
 #if($widget.selectOne)
-<option value="$!{widget.selectOneValue}" #if("$!data.object" == "")selected="selected"#end>${widget.selectOneText}</option>
+<option value="" #if("$!data.object" == "")selected="selected"#end>${widget.selectOneText}</option>
 #end
 #foreach($ov in $field.optionValues)
 	<option value="${ov.value}" #if("$ov.value" == "$!data.object")selected="selected"#end>${ov.displayText}</option>
