@@ -1,7 +1,7 @@
 #header(${layout.title} ${layout.links})
 
 #if("$!{layout.description}" != "")
-        <p>${layout.description}</p>
+       <p>${h.raw($layout.description)}</p>
 #end
       </div>
       <form class="form-horizontal" action="${h.url("/form/${layout.formName}/submit")}" method="post">
