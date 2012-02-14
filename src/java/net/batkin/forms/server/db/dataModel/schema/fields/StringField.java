@@ -12,6 +12,7 @@ public class StringField extends FormField<String> {
 
 	private String defaultValue;
 	private Integer maxLength;
+	private Integer minLength;
 	private SubType subType;
 
 	private Integer width;
@@ -21,6 +22,7 @@ public class StringField extends FormField<String> {
 		super(obj, String.class);
 		this.defaultValue = getStringValue(obj, "defaultValue", "");
 		this.maxLength = getIntegerValue(obj, "maxLength", null);
+		this.minLength = getIntegerValue(obj, "minLength", null);
 
 		String subTypeString = getStringValue(obj, "subType", "plain");
 		try {
@@ -38,6 +40,7 @@ public class StringField extends FormField<String> {
 	@Override
 	public void addAdditionalData(BSONObject obj) {
 		putValue(obj, "maxLength", maxLength);
+		putValue(obj, "minLength", minLength);
 		putValue(obj, "subType", subType.toString());
 
 		if (subType == SubType.multiline) {
@@ -58,6 +61,10 @@ public class StringField extends FormField<String> {
 
 	public Integer getMaxLength() {
 		return maxLength;
+	}
+
+	public Integer getMinLength() {
+		return minLength;
 	}
 
 	public SubType getSubType() {

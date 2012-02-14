@@ -5,6 +5,7 @@ import java.util.Map;
 import net.batkin.forms.server.db.dataModel.form.FieldData;
 import net.batkin.forms.server.db.dataModel.schema.fields.FieldValidationException;
 import net.batkin.forms.server.db.dataModel.schema.fields.FormField;
+import net.batkin.forms.server.db.dataModel.schema.fields.StringField;
 import net.batkin.forms.server.exception.ServerDataException;
 
 import org.bson.BSONObject;
@@ -36,6 +37,25 @@ public class StringTextWidget extends FormWidget<String> {
 
 				if (field.getRequired() && "".equals(nativeData)) {
 					throw new FieldValidationException("required", field);
+				}
+
+				if (nativeData == null) {
+					return;
+				}
+
+				String stringValue = (String) nativeData;
+				StringField stringField = (StringField) field;
+
+				Integer maxLength = stringField.getMaxLength();
+				if (maxLength != null) {
+					if (stringValue.length() > maxLength.intValue()) {
+						throw new FieldValidationException("must be less than " + maxLength + " characters", field);
+					}
+				}
+
+				Integer minLength = stringField.getMinLength();
+				if (!stringValue.equals("") && stringValue.length() < minLength.intValue()) {
+					throw new FieldValidationException("must be at least " + minLength + " characters", field);
 				}
 			}
 		};
