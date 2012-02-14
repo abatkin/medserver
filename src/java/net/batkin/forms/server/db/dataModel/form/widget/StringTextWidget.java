@@ -54,8 +54,10 @@ public class StringTextWidget extends FormWidget<String> {
 				}
 
 				Integer minLength = stringField.getMinLength();
-				if (!stringValue.equals("") && stringValue.length() < minLength.intValue()) {
-					throw new FieldValidationException("must be at least " + minLength + " characters", field);
+				if (minLength != null) {
+					if (!stringValue.equals("") && stringValue.length() < minLength.intValue()) {
+						throw new FieldValidationException("must be at least " + minLength + " characters", field);
+					}
 				}
 			}
 		};
