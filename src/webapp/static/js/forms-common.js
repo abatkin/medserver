@@ -35,7 +35,10 @@ function successValidation(id) {
 	$("#group-" + id + " span.help-inline").addClass('hidden');
 }
 
+all_validators = [];
+
 function addRule(selector, error, validator) {
+	all_validators.push([selector, error, validator]);
 	selector.blur(function() {
 		var id = $(this).attr('id');
 		if (validator(this)) {
@@ -71,7 +74,34 @@ function stringMaxLength(fieldName, length) {
 	});
 }
 
+function setupForm() {
+	$('form.main-form').submit(function() {
+		var failures = 0;
+		for (var i = 0; i < all_validators.length; i++) {
+			[selector, error, validator] = all_validators[i];
+			selector.each(function() {
+				var id = $(this).attr('id');
+				if (validator(this)) {
+					successValidation(id);
+				} else {
+					failValidation(id, error);
+					failures++;
+				}
+			});
+		}
+	
+		if (failures > 0) {
+			$('#error-box').removeClass('hidden');
+			$(document).scrollTop($('#error-box').offset().top - 70);
+			return false;
+		} else {
+			return true;
+		}
+	});
+}
+
 $(document).ready(function() {
 	setupTabs();
 	setupValidation();
+	setupForm();
 });
