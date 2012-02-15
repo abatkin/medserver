@@ -12,6 +12,7 @@
 
     <!-- Le styles -->
     ${h.css('bootstrap.min.css')}
+    ${h.css('custom.css')}
     <style>
       body {
         padding-top: 60px; /* 60px to make the container go all the way to the bottom of the topbar */
@@ -53,11 +54,12 @@
 #if($links && !$links.isEmpty())
 	#showTabContent($links)
 #end
-
-    <div class="container" id="data-main">
+	<div class="container">
+    <div class="content" id="data-main">
       <a name="#top"></a>
       <div class="page-header">
         <h1>${title}</h1>
+      </div>
 
 #end
 
@@ -74,7 +76,7 @@
 #macro(showTabContent $links)
 	#foreach($link in $links)
 		#if($link.linkType == "DataLink")
-			<div class="container" id="data-${link.name}">
+			<div class="content" id="data-${link.name}">
 				<h1>${link.displayText}</h1>
 				${h.raw($link.displayData)}
 			</div>

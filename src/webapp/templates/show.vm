@@ -3,7 +3,7 @@
 #if("$!{layout.description}" != "")
        <p>${h.raw($layout.description)}</p>
 #end
-      </div>
+
       <form class="form-horizontal" action="${h.url("/form/${layout.formName}/submit")}" method="post">
 #if(${result.hasErrors()})
 <p>There were errors with your submission. Please correct them and resubmit the form.</p>
