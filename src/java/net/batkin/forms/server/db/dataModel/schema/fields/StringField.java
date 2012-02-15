@@ -1,5 +1,8 @@
 package net.batkin.forms.server.db.dataModel.schema.fields;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import net.batkin.forms.server.exception.ServerDataException;
 
 import org.bson.BSONObject;
@@ -77,6 +80,22 @@ public class StringField extends FormField<String> {
 
 	public Integer getHeight() {
 		return height;
+	}
+
+	@Override
+	public FieldValidator[] getValidators() {
+		List<FieldValidator> validators = new ArrayList<FieldValidator>();
+		if (maxLength != null) {
+			validators.add(new BasicFieldValidator("stringMaxLength", maxLength));
+		}
+		if (minLength != null) {
+			validators.add(new BasicFieldValidator("stringMinLength", minLength));
+		}
+		if (!validators.isEmpty()) {
+			return validators.toArray(new FieldValidator[0]);
+		} else {
+			return null;
+		}
 	}
 
 	@Override

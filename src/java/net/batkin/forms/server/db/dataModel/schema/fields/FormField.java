@@ -61,6 +61,10 @@ public abstract class FormField<DbClass> extends DbDataModel {
 		return fromNativeObject(obj);
 	}
 
+	public FieldValidator[] getValidators() {
+		return null;
+	}
+
 	public abstract String getDataTypeName();
 
 	public abstract Object getDefaultValue();
@@ -78,5 +82,11 @@ public abstract class FormField<DbClass> extends DbDataModel {
 	public static FormField<?> parseField(BSONObject fieldObj) throws ControllerException {
 		String dataType = getStringValue(fieldObj, "dataType");
 		return FieldManager.getInstance().getObject(dataType, fieldObj);
+	}
+
+	public interface FieldValidator {
+		String getFunctionName();
+
+		Object[] getArguments();
 	}
 }
