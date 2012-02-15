@@ -49,7 +49,7 @@ public class StringTextWidget extends FormWidget<String> {
 				Integer maxLength = stringField.getMaxLength();
 				if (maxLength != null) {
 					if (stringValue.length() > maxLength.intValue()) {
-						throw new FieldValidationException("must be less than " + maxLength + " characters", field);
+						throw new FieldValidationException("must be no more than " + maxLength + " characters", field);
 					}
 				}
 

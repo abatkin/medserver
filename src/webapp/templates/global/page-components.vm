@@ -97,6 +97,15 @@
     ${h.js('jquery-1.7.1.min.js')}
     ${h.js('bootstrap.min.js')}
     ${h.js('forms-common.js')}
+    <script type="text/javascript">
+    	$(document).ready(function() {
+    		$!{startupJsString}
+    	})
+    </script>
   </body>
 </html>
+#end
+
+#macro(startupJs $line)
+#set($startupJsString = "$!{startupJsString}${line};")
 #end

@@ -36,6 +36,11 @@
 #macro(showWidget $widget)
 	#set($field = $schema.getField($widget.name))
 	#set($data = $result.getValue($widget.name))
+	#if("$!field.validators" != "")
+		#foreach($validator in $field.validators)
+			#startupJs("${validator.functionName}('${field.fieldName}',$h.jsArgList($!validator.arguments))")
+		#end
+	#end
   	<div class="control-group #if($data.hasError())error#end" id="group-${field.fieldName}">
   		<label class="control-label" for="${field.fieldName}">${widget.title}</label>
   		<div class="controls">

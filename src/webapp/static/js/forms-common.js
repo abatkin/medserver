@@ -59,6 +59,18 @@ function setupValidation() {
 	});
 }
 
+function stringMinLength(fieldName, length) {
+	addRule($("#" + fieldName), "must be at least " + length + " characters", function(element) {
+		return $.trim($(element).val()).length >= length;
+	});
+}
+
+function stringMaxLength(fieldName, length) {
+	addRule($("#" + fieldName), "must be no more than " + length + " characters", function(element) {
+		return $.trim($(element).val()).length <= length;
+	});
+}
+
 $(document).ready(function() {
 	setupTabs();
 	setupValidation();

@@ -1,7 +1,10 @@
 package net.batkin.forms.server.http.velocity;
 
+import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
+
+import org.apache.commons.lang.StringEscapeUtils;
 
 public class Helpers {
 
@@ -55,5 +58,32 @@ public class Helpers {
 		PrintWriter pw = new PrintWriter(sw);
 		t.printStackTrace(pw);
 		return sw.toString();
+	}
+
+	public String jsArgList(Object[] args) throws IOException {
+		if (args == null || args.length == 0) {
+			return "";
+		}
+
+		boolean first = true;
+		StringWriter writer = new StringWriter();
+
+		for (Object arg : args) {
+			if (!first) {
+				writer.write(",");
+			}
+
+			if (arg instanceof Number || arg instanceof Boolean) {
+				writer.write(arg.toString());
+			} else {
+				writer.write('"');
+				StringEscapeUtils.escapeJavaScript(writer, arg.toString());
+				writer.write('"');
+			}
+
+			first = false;
+		}
+
+		return writer.toString();
 	}
 }
