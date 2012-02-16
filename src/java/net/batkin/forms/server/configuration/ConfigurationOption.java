@@ -11,6 +11,7 @@ public class ConfigurationOption {
 	public static final String CONFIG_SESSION_SLEEP_TIME = "sessionSleepTime";
 	public static final String CONFIG_SESSION_VALIDITY_TIME = "sessionValidityTime";
 	public static final String CONFIG_STATIC_DIR = "staticFilesDir";
+	public static final String CONFIG_STATIC_CUSTOM_DIR = "staticFilesCustomDir";
 	public static final String CONFIG_DB_CURRENT_VERSION = "dbVersion";
 	public static final String CONFIG_UPGRADES_DIR = "upgradesDir";
 	public static final String CONFIG_CUSTOM_UPGRADES_DIR = "customUpgradesDir";

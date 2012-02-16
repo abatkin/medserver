@@ -1,5 +1,6 @@
 package net.batkin.forms.server;
 
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStream;
 import java.net.InetSocketAddress;
@@ -120,6 +121,12 @@ public class RunServer {
 		String staticDir = ConfigBuilder.getResourceDirectory("static", ConfigurationOption.CONFIG_STATIC_DIR);
 		ContextHandler staticContext = handler.addContext("/static", staticDir);
 		staticContext.setHandler(new ResourceHandler());
+
+		String staticCustomDir = ConfigBuilder.getResourceDirectory("staticCustom", ConfigurationOption.CONFIG_STATIC_CUSTOM_DIR);
+		if (new File(staticCustomDir).isDirectory()) {
+			ContextHandler staticCustomContext = handler.addContext("/custom-assets", staticCustomDir);
+			staticCustomContext.setHandler(new ResourceHandler());
+		}
 
 		ContextHandler formsContext = handler.addContext("/", "/");
 		formsContext.setHandler(new RestHandler(""));

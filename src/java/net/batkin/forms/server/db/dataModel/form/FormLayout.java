@@ -30,7 +30,9 @@ public class FormLayout extends DbDataModel {
 	private String formName;
 	private String schemaName;
 	private String title;
+	private String header;
 	private String description;
+	private LinkStyle linkStyle;
 	private List<FormLink> links;
 	private List<FormSection> sections;
 	private List<FormWidget<?>> allWidgets;
@@ -41,8 +43,21 @@ public class FormLayout extends DbDataModel {
 		id = getObjectIdValue(obj, "_id");
 		formName = getStringValue(obj, "formName");
 		schemaName = getStringValue(obj, "schemaName");
+		header = getStringValue(obj, "header", null);
 		description = getStringValue(obj, "description", null);
 		title = getStringValue(obj, "title");
+
+		String linkStyleString = getStringValue(obj, "linkStyle", null);
+		if (linkStyleString != null) {
+			try {
+				linkStyle = LinkStyle.valueOf(linkStyleString);
+			} catch (Exception e) {
+				// Ignore
+			}
+		}
+		if (linkStyle == null) {
+			linkStyle = LinkStyle.Horizontal;
+		}
 
 		links = new ArrayList<FormLink>();
 		for (BSONObject linkObj : getArrayValue(obj, "links", BSONObject.class)) {
@@ -129,8 +144,16 @@ public class FormLayout extends DbDataModel {
 		return title;
 	}
 
+	public String getHeader() {
+		return header;
+	}
+
 	public String getDescription() {
 		return description;
+	}
+
+	public LinkStyle getLinkStyle() {
+		return linkStyle;
 	}
 
 	public List<FormLink> getLinks() {
@@ -156,5 +179,9 @@ public class FormLayout extends DbDataModel {
 		}
 
 		return new FormLayout(formData);
+	}
+
+	public enum LinkStyle {
+		Horizontal, Vertical
 	}
 }
