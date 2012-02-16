@@ -1,6 +1,6 @@
 #header(${layout.title} ${layout.links})
 
-          <div class="hero-unit">
+          <div class="well">
             <h3>${layout.title}</h3>
 
 #if("$!{layout.description}" != "")
